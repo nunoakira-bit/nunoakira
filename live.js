@@ -48,13 +48,24 @@ export class LiveSession {
   }
 
   // -- 2. audio ------------------------------------------------------------
-  async openAudio() {
-    this.inCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: IN_RATE });
+  // Playback only. The microphone is attached later, and only if the visitor
+  // asks for it — opening the link must never trigger a permission prompt.
+  async openOutput() {
     this.outCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: OUT_RATE });
-    this.stream = (this.shared && this.shared.active) ? this.shared
+    if (this.outCtx.state === "suspended") await this.outCtx.resume();
+    this.gain = this.outCtx.createGain();
+    this.gain.connect(this.outCtx.destination);
+  }
+
+  async openMic(stream) {
+    if (this.node) return;
+    this.inCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: IN_RATE });
+    if (this.inCtx.state === "suspended") await this.inCtx.resume();
+    this.stream = (stream && stream.active) ? stream
       : await navigator.mediaDevices.getUserMedia({
           audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true },
         });
+    this.shared = stream || this.shared;
 
     const src = this.inCtx.createMediaStreamSource(this.stream);
     // ScriptProcessor is deprecated but universally available; an AudioWorklet
@@ -80,8 +91,13 @@ export class LiveSession {
     src.connect(node);
     node.connect(this.inCtx.destination);   // required for the callback to fire
     this.node = node;
-    this.gain = this.outCtx.createGain();
-    this.gain.connect(this.outCtx.destination);
+  }
+
+  closeMic() {
+    try { this.node?.disconnect(); } catch (_) {}
+    this.node = null; this.level = 0;
+    try { this.inCtx?.close(); } catch (_) {}
+    this.inCtx = null;
   }
 
   play(bytes) {
@@ -115,7 +131,7 @@ export class LiveSession {
   async start() {
     const grant = await this.mint();
     this.emit("budget", grant.budgetSeconds);
-    await this.openAudio();
+    await this.openOutput();
 
     const ai = new GoogleGenAI({ apiKey: grant.token, httpOptions: { apiVersion: "v1alpha" } });
     this.running = true;
@@ -172,11 +188,11 @@ export class LiveSession {
     this.running = false;
     this.interrupt();
     try { this.session?.close(); } catch (_) {}
-    try { this.node?.disconnect(); } catch (_) {}
+    this.closeMic();
     // Only stop tracks we opened ourselves — killing a shared stream would make
     // the browser prompt for the microphone all over again.
     if (this.stream && this.stream !== this.shared) this.stream.getTracks().forEach(t => t.stop());
-    this.inCtx?.close(); this.outCtx?.close();
+    try { this.outCtx?.close(); } catch (_) {}
     this.session = null; this.level = 0;
     this.emit("stopped");
   }

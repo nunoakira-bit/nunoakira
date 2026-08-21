@@ -877,12 +877,13 @@ function say(text,tools=[]){
   },Math.min(2200+text.length*38,9000));
 }
 
-function ask(q){
+async function ask(q){
   if(!q.trim())return;
   $("you").textContent=q; S.log.push({who:"you",text:q});
   $("field").value=""; $("chips").innerHTML="";
   setState("thinking"); setStatus(C().status.thinking);
-  if(live&&live.running){ live.send(q); return; }
+  const linked=await connect();
+  if(linked===true&&live&&live.running){ live.send(q); return; }
   const m=match(q);
   setTimeout(()=>{
     if(!m) return say(C().unknown,["show_contact_options"]);
@@ -960,7 +961,8 @@ function buildRec(){
 let live=null, herBuf="", herTimer=null;
 
 // The real link. Falls back to the local demo brain when no backend is set.
-async function startLive(){
+async function connect(){
+  if(live) return true;
   if(!window.LiveSession||!window.CONFIG.FUNCTION_URL) return false;
   try{
     live=new window.LiveSession({
@@ -1005,12 +1007,12 @@ async function startVoice(){
   if(!ok){setState("error");setStatus(C().status.denied);
     setTimeout(()=>{setState("idle");setStatus(C().status.ready)},2600);return}
   S.voice=true; $("mic").classList.add("live"); $("budget").classList.add("on");
-  setState("thinking"); setStatus(C().status.thinking);
 
-  const linked=await startLive();
-  if(linked==="blocked"){stopVoice(true);return}
-  if(!linked){
-    rec=buildRec();                    // reuses the grant we already hold
+  const linked=await connect();
+  if(linked===true){
+    live.openMic(micStream);           // start streaming into the existing link
+  }else{
+    rec=buildRec();                    // demo brain: browser transcription
     if(rec){try{rec.start()}catch(_){}} else say(C().noSTT,[]);
   }
   setState("listening"); setStatus(C().status.listening);
@@ -1018,7 +1020,9 @@ async function startVoice(){
 }
 function stopVoice(exhausted){
   S.voice=false; micOff(); clearInterval(S.timer);
-  if(live){try{live.stop()}catch(_){}live=null}
+  // The link stays open for typing. Only the microphone is released.
+  if(live){try{live.closeMic()}catch(_){}}
+  if(exhausted&&live){try{live.stop()}catch(_){}live=null}
   if(rec){rec.onend=null;try{rec.stop()}catch(_){}rec=null}
   $("mic").classList.remove("live");
   if($("you").textContent.startsWith("…"))$("you").textContent="";
@@ -1084,13 +1088,22 @@ function begin(l){
   if(rec)rec.lang=C().code;
   loadPublished();
   $("convo").classList.add("on"); $("topbar").classList.add("on");
-  setState("responding"); setStatus(C().status.responding);
-  setTimeout(()=>{
+  setState("thinking"); setStatus(C().status.thinking);
+
+  connect().then(function(ok){
+    if(ok===true){
+      // She says the opening line herself, in her own voice.
+      live.send("__open__");
+      return;
+    }
+    // No link: the local script keeps the entrance whole.
+    if(ok==="blocked"){setState("ended");setStatus(C().status.ended)}
+    setState("responding"); setStatus(C().status.responding);
     render(C().open); speak(C().open); S.log.push({who:"her",text:C().open});
-    setTimeout(()=>{
+    setTimeout(function(){
       setState("idle"); setStatus(C().status.ready); chips();
     },Math.min(2400+C().open.length*30,9000));
-  },520);
+  });
 }
 
 /* ---------- controls ---------- */
