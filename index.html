@@ -58,6 +58,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   padding:0 26px 0;min-height:0}
 
 /* ---------- gate ---------- */
+#gate[hidden]{display:none}
 #gate{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:0;padding:26px;text-align:center;transition:opacity .7s var(--ease),transform .9s var(--ease)}
 #gate.out{opacity:0;transform:translateY(-12px);pointer-events:none}
@@ -80,7 +81,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   gap:0;padding:26px;text-align:center}
 #lang.on{display:flex;animation:rise .8s var(--ease) both}
 #lang h2{font-family:var(--display);font-weight:200;font-size:clamp(22px,3.4vw,30px);
-  color:var(--bone-dim);margin-bottom:38px}
+  color:var(--bone-dim);margin-bottom:13px}
+#lang .alt{display:flex;flex-direction:column;gap:5px;margin-bottom:40px}
+#lang .alt span{font-family:var(--display);font-weight:200;font-size:clamp(14px,1.6vw,16px);
+  color:var(--faint,rgba(239,233,222,.26))}
 #lang.out{animation:sink .5s var(--ease) forwards}
 .langs{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
 .langs button{padding:13px 26px;border:1px solid var(--line);border-radius:999px;font-size:15px;
@@ -288,22 +292,26 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   </div>
 </div>
 
-<section id="gate">
-  <div class="eyebrow mono">Product Design · Curitiba, Brazil</div>
-  <h1>Nuno Akira Sugano<span>and one of his creatures</span></h1>
-  <p>I turn complex systems and emerging technologies into clear, scalable and testable product experiences.</p>
-  <div class="acts">
-    <button class="primary" id="enter">Explore with AI</button>
-    <button class="ghost" id="dl">Download résumé</button>
-  </div>
-</section>
-
-<section id="lang">
+<section id="lang" class="on">
   <h2>Which language would you like to use?</h2>
+  <div class="alt">
+    <span>Em qual idioma você prefere conversar?</span>
+    <span lang="ja">どの言語をご希望ですか？</span>
+  </div>
   <div class="langs">
     <button data-l="pt">Português<small>pt-BR</small></button>
     <button data-l="en">English<small>en-US</small></button>
     <button data-l="ja">日本語<small>ja-JP</small></button>
+  </div>
+</section>
+
+<section id="gate" hidden>
+  <div class="eyebrow mono" id="g-eyebrow"></div>
+  <h1 id="g-name">Nuno Akira Sugano<span id="g-sub"></span></h1>
+  <p id="g-line"></p>
+  <div class="acts">
+    <button class="primary" id="enter"></button>
+    <button class="ghost" id="dl"></button>
   </div>
 </section>
 
@@ -379,6 +387,9 @@ const T = {
 pt:{code:"pt-BR",tag:"PT",
   open:"Olá. Eu sou mais uma das criaturas surgidas da mente do Nuno. Estou aqui para apresentar um pouco sobre ele, sua experiência e as coisas que ele cria. O que você gostaria de conhecer primeiro?",
   ph:"Escreva sua pergunta",
+  gate:{eyebrow:"Product Design · Curitiba, Brasil",sub:"e uma de suas criaturas",
+    line:"Transformo sistemas complexos e tecnologias emergentes em experiências de produto claras, escaláveis e testáveis.",
+    enter:"Explorar com a IA",resume:"Baixar currículo"},
   status:{ready:"Pronta",listening:"Escutando",thinking:"Pensando",responding:"Respondendo",
     denied:"Microfone bloqueado",ended:"Sessão de voz encerrada",text:"Modo texto"},
   bar:{transcript:"Transcrição",sound:"Som ligado",muted:"Som desligado"},
@@ -417,6 +428,9 @@ pt:{code:"pt-BR",tag:"PT",
 en:{code:"en-US",tag:"EN",
   open:"Hello. I'm another creature born from Nuno's mind. I'm here to introduce you to his experience, his work and the things he creates. What would you like to explore first?",
   ph:"Type your question",
+  gate:{eyebrow:"Product Design · Curitiba, Brazil",sub:"and one of his creatures",
+    line:"I turn complex systems and emerging technologies into clear, scalable and testable product experiences.",
+    enter:"Explore with AI",resume:"Download résumé"},
   status:{ready:"Ready",listening:"Listening",thinking:"Thinking",responding:"Responding",
     denied:"Microphone blocked",ended:"Voice session ended",text:"Text mode"},
   bar:{transcript:"Transcript",sound:"Sound on",muted:"Sound off"},
@@ -455,6 +469,9 @@ en:{code:"en-US",tag:"EN",
 ja:{code:"ja-JP",tag:"JA",
   open:"こんにちは。私は、ヌノの発想から生まれた存在のひとつです。彼の経験や仕事、そして彼が生み出してきたものをご紹介します。まず、何から知りたいですか？",
   ph:"質問を入力してください",
+  gate:{eyebrow:"プロダクトデザイン · ブラジル、クリチバ",sub:"そして彼が生んだ存在のひとつ",
+    line:"複雑なシステムと新しい技術を、明快で拡張性があり、検証できるプロダクト体験に変えています。",
+    enter:"AIと対話する",resume:"履歴書をダウンロード"},
   status:{ready:"待機中",listening:"聞いています",thinking:"考えています",responding:"応答中",
     denied:"マイクが使えません",ended:"音声セッション終了",text:"テキストモード"},
   bar:{transcript:"記録",sound:"音声オン",muted:"音声オフ"},
@@ -1034,21 +1051,45 @@ function stopVoice(exhausted){
 /* ============================================================
    FLOW
    ============================================================ */
-$("enter").onclick=()=>{
-  $("gate").classList.add("out");
-  setTimeout(()=>{$("gate").style.display="none";$("lang").classList.add("on")},420);
-};
-$("dl").onclick=()=>{
-  $("gate").classList.add("out");
-  setTimeout(()=>{$("gate").style.display="none";begin(store.get("nas.lang")||"en");
-    setTimeout(()=>ask(C().chips[8]),1500)},420);
-};
-document.querySelectorAll(".langs button").forEach(b=>{
-  b.onclick=()=>{
-    $("lang").classList.add("out");
-    setTimeout(()=>{$("lang").classList.remove("on","out");begin(b.dataset.l)},430);
-  };
+// Language first: the choice that follows should already be in the visitor's
+// own words, not translated after the fact.
+let skipGate=false;
+
+function paintGate(){
+  const g=C().gate;
+  $("g-eyebrow").textContent=g.eyebrow;
+  $("g-sub").textContent=g.sub;
+  $("g-line").textContent=g.line;
+  $("enter").textContent=g.enter;
+  $("dl").textContent=g.resume;
+}
+function hideGate(){ $("gate").classList.add("out");
+  setTimeout(function(){$("gate").hidden=true;$("gate").classList.remove("out")},420); }
+
+function chooseLang(l){
+  S.lang=l; store.set("nas.lang",l);
+  document.documentElement.lang=C().code;
+  $("lang").classList.add("out");
+  setTimeout(function(){
+    $("lang").classList.remove("on","out");
+    if(skipGate){ skipGate=false; begin(l); return; }
+    paintGate();
+    $("gate").hidden=false;
+  },430);
+}
+document.querySelectorAll(".langs button").forEach(function(b){
+  b.onclick=function(){ chooseLang(b.dataset.l) };
 });
+
+$("enter").onclick=function(){ hideGate(); begin(S.lang); };
+
+// The résumé button hands over the file, not a conversation about the file.
+$("dl").onclick=async function(){
+  await loadPublished();
+  if(K.resume){ window.open(K.resume.url,"_blank","noopener"); return; }
+  hideGate(); begin(S.lang);
+  setTimeout(function(){ ask(C().chips[8]) },1500);
+};
 
 // Published rows win over the seed values above. If the network is down or a
 // section is still empty, the seed keeps the experience whole.
@@ -1061,7 +1102,7 @@ async function loadPublished(){
     const r=await Promise.all([
       q("profile?select=name,role,summary,location&status=eq.published&limit=1"),
       q("skills?select=name&status=eq.published&order=priority.desc"),
-      q("resumes?select=title,language,version_date,storage_path&status=eq.published&is_primary=eq.true&limit=1")
+      q("resumes?select=title,language,version_date,storage_path&status=eq.published&is_primary=eq.true")
     ]);
     const prof=r[0], sk=r[1], res=r[2];
     if(prof&&prof[0]){
@@ -1070,9 +1111,17 @@ async function loadPublished(){
       $("sig").innerHTML=K.name+' <em>— '+K.role+'</em>';
     }
     if(sk&&sk.length)K.skills=sk.map(function(s){return s.name});
-    if(res&&res[0]&&res[0].storage_path){
-      K.resume=Object.assign({},res[0],
-        {url:U+"/storage/v1/object/public/resumes/"+res[0].storage_path});
+    if(res&&res.length){
+      // Prefer the file written in the language being spoken. If Nuno hasn't
+      // published that one yet, offer what exists rather than nothing — the
+      // card shows the language, so nobody is misled about what they're getting.
+      const want=C().code;
+      const pick=res.filter(function(x){return x.storage_path})
+        .sort(function(a,b){
+          return (b.language===want?2:0)-(a.language===want?2:0);
+        })[0];
+      if(pick) K.resume=Object.assign({},pick,
+        {url:U+"/storage/v1/object/public/resumes/"+pick.storage_path});
     }
   }catch(_){}
 }
@@ -1117,7 +1166,10 @@ $("mutebtn").onclick=e=>{
 $("langbtn").onclick=()=>{
   clearCards(); $("convo").classList.remove("on"); $("topbar").classList.remove("on");
   speechSynthesis.cancel(); if(S.voice)stopVoice(false);
-  setState("idle"); started=false; $("lang").classList.add("on");
+  if(live){try{live.stop()}catch(_){}live=null}
+  setState("idle"); started=false;
+  skipGate=true;                      // already past the entrance; go straight back in
+  $("lang").classList.add("on");
 };
 $("tbtn").onclick=()=>{
   const on=$("transcript").classList.toggle("on");
