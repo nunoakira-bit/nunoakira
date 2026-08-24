@@ -193,6 +193,25 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   font-size:13px;text-decoration:none;transition:background .3s,border-color .3s}
 .card .dl:hover{background:rgba(194,162,120,.10);border-color:var(--brass)}
 .card .dl::after{content:"\2193";font-size:14px}
+.card.wide{width:420px;max-width:100%}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px}
+.shots figure{cursor:pointer;border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  background:#000;transition:border-color .3s,transform .3s}
+.shots figure:hover{border-color:rgba(194,162,120,.55);transform:translateY(-2px)}
+.shots img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;opacity:.9}
+.shots figure:hover img{opacity:1}
+.shots figcaption{padding:6px 8px;font-size:10.5px;line-height:1.35;color:var(--bone-faint);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#shotview{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.93);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:center;padding:52px 30px;
+  animation:rise .3s var(--ease)}
+#shotview figure{max-width:1100px;max-height:100%;display:flex;flex-direction:column;gap:14px}
+#shotview img{max-width:100%;max-height:78vh;object-fit:contain;border-radius:10px;
+  border:1px solid var(--line)}
+#shotview figcaption{font-size:13px;line-height:1.6;color:var(--bone-dim);max-width:78ch;
+  margin:0 auto;text-align:center}
+#shotview .close{position:fixed;top:24px;right:28px;color:var(--bone-dim)}
+#shotview .close:hover{color:var(--bone)}
 .card .empty{margin-top:11px;font-size:12px;line-height:1.6;color:var(--bone-faint);
   border-left:1px solid rgba(194,162,120,.35);padding-left:11px}
 .card .x{position:absolute;top:13px;right:13px;color:var(--bone-faint);line-height:1;font-size:15px}
@@ -411,7 +430,7 @@ pt:{code:"pt-BR",tag:"PT",
     denied:"Microfone bloqueado",ended:"Sessão de voz encerrada",text:"Modo texto"},
   bar:{visual:"Portfólio visual",transcript:"Transcrição",sound:"Som ligado",muted:"Som desligado"},
   chips:["Fale sobre a experiência do Nuno","Quais são suas competências?","Como ele usa IA em design?",
-    "Como ele trabalha com design systems?","Como ele colabora com devs?","Por que o Japão?",
+    "Como ele trabalha com design systems?","Como ele colabora com devs?","Como é trabalhar com ele à distância?",
     "Que idiomas ele fala?","Como entro em contato?","Posso baixar o currículo?"],
   noSTT:"Seu navegador não faz transcrição de voz. Use o Chrome ou o Edge para falar comigo — ou continue por texto, funciona igual.",
   unknown:"Eu não tenho uma informação confirmada sobre isso, mas posso ajudar você a entrar em contato diretamente com o Nuno.",
@@ -425,20 +444,20 @@ pt:{code:"pt-BR",tag:"PT",
     ai:"Nuno usa IA de forma aplicada: interfaces conversacionais, produtos habilitados por IA e prototipação funcional em código com apoio de IA. Esta conversa é um exemplo — ele desenhou e construiu a experiência que você está usando agora.",
     ds:"Design systems são uma das frentes centrais do trabalho dele: componentes, tokens, documentação e governança, sempre alinhados com quem implementa.",
     devs:"Ele colabora diretamente com desenvolvimento — alinhamento com stakeholders, revisão de implementação e prototipação funcional em código, para que a ideia chegue testável em vez de teórica.",
-    japan:"Nuno viveu no Japão dos 9 aos 18 anos e tem familiaridade com a cultura japonesa. Está aberto a colaborar com equipes japonesas, mudar para o Japão e a oportunidades com visto e relocation.",
+    japan:"Nuno viveu no Japão dos 9 aos 18 anos, o que lhe deu familiaridade com a cultura japonesa e facilidade para transitar entre contextos diferentes. É parte da história dele, não o objetivo da carreira: ele considera oportunidades internacionais de forma ampla, remotas ou presenciais.",
     languages:"Português nativo. Inglês fluente para colaboração profissional diária. Japonês básico, com leitura e escrita de hiragana e katakana.",
     education:"Universidade Federal do Paraná — UFPR, Bachelor in Design, de 2006 a 2010.",
-    availability:"Ele está aberto a trabalho remoto internacional, colaboração com equipes japonesas, mudança para o Japão e oportunidades com visto e relocation.",
+    availability:"Ele está aberto a trabalho remoto internacional e a oportunidades presenciais, no Brasil ou fora. Não está procurando um país específico.",
     contact:"Você pode falar com ele por e-mail ou telefone — deixei os dois aqui ao lado.",
     resume:"Sim. O currículo do Nuno está disponível para download — deixei o botão aqui ao lado.",
     resumeSoon:"O arquivo ainda não foi publicado. Posso colocar você em contato direto com o Nuno, que ele envia."
   },
-  cards:{profile:"Perfil",experience:"Experiência",skills:"Competências",education:"Formação",
+  cards:{caseLabel:"Case",close:"Fechar",profile:"Perfil",experience:"Experiência",skills:"Competências",education:"Formação",
     languages:"Idiomas",availability:"Disponibilidade",contact:"Contato",resume:"Currículo",
     practice:"Áreas de atuação",native:"Nativo",fluent:"Fluente",basic:"Básico",
     fluentNote:"Colaboração profissional diária",basicNote:"Lê e escreve hiragana e katakana",
-    remote:"Remoto internacional",jp:"Equipes japonesas",move:"Mudança para o Japão",
-    visa:"Visto e relocation",download:"Baixar PDF",
+    remote:"Remoto internacional",jp:"Times distribuídos",move:"Presencial ou híbrido",
+    visa:"Aberto a relocation",download:"Baixar PDF",
     pending:"Nenhuma empresa está publicada ainda. Os cargos e períodos entram por aqui quando forem cadastrados no painel — nada é preenchido automaticamente.",
     resumePending:"O PDF ainda não foi enviado. Assim que Nuno publicar a versão, o download aparece aqui."}
 },
@@ -454,7 +473,7 @@ en:{code:"en-US",tag:"EN",
     denied:"Microphone blocked",ended:"Voice session ended",text:"Text mode"},
   bar:{visual:"Visual portfolio",transcript:"Transcript",sound:"Sound on",muted:"Sound off"},
   chips:["Tell me about Nuno's experience","What are his strongest skills?","How does he use AI in product design?",
-    "How does he work with design systems?","How does he collaborate with developers?","Why is he interested in Japan?",
+    "How does he work with design systems?","How does he collaborate with developers?","What is he like to work with remotely?",
     "What languages does he speak?","How can I contact him?","Can I download his résumé?"],
   noSTT:"Your browser doesn't transcribe speech. Use Chrome or Edge to talk to me — or keep going in text, it works just as well.",
   unknown:"I don't have confirmed information about that, but I can help you contact Nuno directly.",
@@ -468,20 +487,20 @@ en:{code:"en-US",tag:"EN",
     ai:"Nuno uses AI in an applied way: conversational interfaces, AI-enabled products, and functional prototyping in code with AI support. This conversation is one example — he designed and built the experience you're using right now.",
     ds:"Design systems are one of the central threads in his work: components, tokens, documentation and governance, always aligned with the people implementing them.",
     devs:"He collaborates directly with engineering — stakeholder alignment, implementation review, and functional prototyping in code, so an idea arrives testable rather than theoretical.",
-    japan:"Nuno lived in Japan from age 9 to 18 and is familiar with Japanese culture. He's open to collaborating with Japanese teams, relocating to Japan, and opportunities with visa and relocation support.",
+    japan:"Nuno lived in Japan from age 9 to 18, which left him at ease moving between cultural contexts. It is part of his history rather than the aim of his career: he considers international opportunities broadly, remote or on-site.",
     languages:"Portuguese is native. English is fluent for daily professional collaboration. Japanese is basic, with reading and writing of hiragana and katakana.",
     education:"Universidade Federal do Paraná — UFPR, Bachelor in Design, 2006 to 2010.",
-    availability:"He's open to international remote work, collaboration with Japanese teams, relocating to Japan, and roles with visa and relocation support.",
+    availability:"He is open to international remote work and to on-site roles, in Brazil or abroad. He is not searching for one specific country.",
     contact:"You can reach him by email or phone — I've put both beside us.",
     resume:"Yes. Nuno’s résumé is available to download — the button is right beside us.",
     resumeSoon:"The file isn’t published yet. I can put you in touch with Nuno directly and he’ll send it."
   },
-  cards:{profile:"Profile",experience:"Experience",skills:"Skills",education:"Education",
+  cards:{caseLabel:"Case",close:"Close",profile:"Profile",experience:"Experience",skills:"Skills",education:"Education",
     languages:"Languages",availability:"Availability",contact:"Contact",resume:"Résumé",
     practice:"Practice areas",native:"Native",fluent:"Fluent",basic:"Basic",
     fluentNote:"Daily professional collaboration",basicNote:"Reads and writes hiragana and katakana",
-    remote:"International remote",jp:"Japanese teams",move:"Relocation to Japan",
-    visa:"Visa and relocation",download:"Download PDF",
+    remote:"International remote",jp:"Distributed teams",move:"On-site or hybrid",
+    visa:"Open to relocation",download:"Download PDF",
     pending:"No companies are published yet. Roles and dates appear here once they're registered in the panel — nothing is filled in automatically.",
     resumePending:"The PDF hasn't been uploaded yet. As soon as Nuno publishes a version, the download appears here."}
 },
@@ -497,7 +516,7 @@ ja:{code:"ja-JP",tag:"JA",
     denied:"マイクが使えません",ended:"音声セッション終了",text:"テキストモード"},
   bar:{visual:"ビジュアル版",transcript:"記録",sound:"音声オン",muted:"音声オフ"},
   chips:["ヌノの経験について","得意な領域は？","デザインでAIをどう使いますか？",
-    "デザインシステムへの取り組みは？","開発者との協働は？","なぜ日本に関心が？",
+    "デザインシステムへの取り組みは？","開発者との協働は？","リモートでの働き方は？",
     "話せる言語は？","連絡方法は？","履歴書はありますか？"],
   noSTT:"ご利用のブラウザは音声の文字起こしに対応していません。ChromeまたはEdgeをお使いください。テキストでも同じようにお答えできます。",
   unknown:"その点については確認された情報がありません。ヌノに直接ご連絡いただけるようお手伝いします。",
@@ -511,20 +530,20 @@ ja:{code:"ja-JP",tag:"JA",
     ai:"ヌノはAIを実務に応用しています。会話型インターフェース、AIを活用したプロダクト、そしてAIを用いたコードによるプロトタイピングです。今ご覧の体験も、彼が設計し実装したものです。",
     ds:"デザインシステムは彼の中心的な仕事のひとつです。コンポーネント、トークン、ドキュメント、運用ルールを、実装する人たちと足並みを揃えて整えています。",
     devs:"開発チームと直接協働します。関係者との合意形成、実装レビュー、コードによるプロトタイピングを通じて、机上の案ではなく検証できる形で届けます。",
-    japan:"ヌノは9歳から18歳まで日本で暮らし、日本の文化に親しみがあります。日本のチームとの協働、日本への移住、ビザや移転支援を伴う機会に関心があります。",
+    japan:"ヌノは9歳から18歳まで日本で暮らし、日本の文化に親しみがあります。異なる文化のあいだを行き来することに慣れている、という経歴です。特定の国を目指しているわけではなく、リモート・オンサイトを問わず国際的な機会を幅広く検討しています。",
     languages:"ポルトガル語は母語です。英語は日常の業務で流暢に使えます。日本語は基礎レベルで、ひらがなとカタカナの読み書きができます。",
     education:"パラナ連邦大学（UFPR）でデザイン学士号を取得しました。2006年から2010年です。",
-    availability:"海外リモートでの勤務、日本のチームとの協働、日本への移住、ビザや移転支援を伴う機会に対応できます。",
+    availability:"海外リモートでの勤務にも、オンサイトの機会にも対応できます。特定の国を目指しているわけではありません。",
     contact:"メールまたは電話でご連絡いただけます。詳細を横に表示しました。",
     resume:"はい。ヌノの履歴書はダウンロードできます。こちらにボタンを表示しました。",
     resumeSoon:"ファイルはまだ公開されていません。ヌノに直接おつなぎしますので、お送りできます。"
   },
-  cards:{profile:"プロフィール",experience:"経験",skills:"専門領域",education:"学歴",
+  cards:{caseLabel:"事例",close:"閉じる",profile:"プロフィール",experience:"経験",skills:"専門領域",education:"学歴",
     languages:"言語",availability:"稼働条件",contact:"連絡先",resume:"履歴書",
     practice:"担当領域",native:"母語",fluent:"流暢",basic:"基礎",
     fluentNote:"日常の業務で使用",basicNote:"ひらがな・カタカナの読み書き",
-    remote:"海外リモート",jp:"日本のチーム",move:"日本への移住",
-    visa:"ビザ・移転支援",download:"PDFをダウンロード",
+    remote:"海外リモート",jp:"分散チーム",move:"オンサイト・ハイブリッド",
+    visa:"移転も検討可",download:"PDFをダウンロード",
     pending:"公開されている企業はまだありません。役職と期間は管理画面に登録された時点で表示されます。自動生成は行いません。",
     resumePending:"PDFは未登録です。ヌノが公開した時点でダウンロードが表示されます。"}
 }};
@@ -579,6 +598,18 @@ const CARD={
     <dl><dt>Email</dt><dd><a href="mailto:${K.contact.email}">${K.contact.email}</a></dd>
     <dt>Phone</dt><dd><a href="tel:${K.contact.phone.replace(/\s/g,"")}">${K.contact.phone}</a></dd>
     <dt>Site</dt><dd><a href="https://${K.contact.site}" target="_blank" rel="noopener">${K.contact.site}</a></dd></dl>`,
+  show_case:(c,a)=>{
+    const k=(K.cases||[]).find(x=>x.slug===(a&&a.slug)||x.name===(a&&a.name));
+    if(!k)return "";
+    const shots=(k.images||[]).concat(k.diagrams||[]);
+    return `<div class="kicker mono">${c.caseLabel}</div><h3>${k.name}</h3>
+      <p>${k.summary||""}</p>
+      ${shots.length?`<div class="shots">`+shots.map(function(s,i){
+        return `<figure data-case="${k.slug}" data-i="${i}">
+          <img src="${s.url}" alt="" loading="lazy">
+          <figcaption>${(s.caption||"").split(".")[0]}</figcaption></figure>`;
+      }).join("")+`</div>`:""}`;
+  },
   show_resume_download:c=>K.resume
     ? `<div class="kicker mono">${c.resume}</div><h3>${K.resume.title}</h3>
        <dl><dt>${K.resume.language||""}</dt><dd>${K.resume.version_date||""}</dd></dl>
@@ -921,6 +952,7 @@ async function ask(q){
   $("you").textContent=q; S.log.push({who:"you",text:q});
   $("field").value=""; $("chips").innerHTML="";
   setState("thinking"); setStatus(C().status.thinking);
+  herBuf="";                           // a new question starts a new answer
   turns++;
   track("asked",{text:q,turn:turns,mode:S.voice?"voice":"text",source:source});
   source="typed";
@@ -937,12 +969,20 @@ async function ask(q){
 }
 
 /* ---------- cards ---------- */
-function addCard(tool){
+function addCard(tool,args){
   if(!CARD[tool])return;
-  track("card",{tool:tool});
+  track("card",{tool:tool,slug:args&&args.slug});
+  const body=CARD[tool](C().cards,args||{});
+  if(!body)return;
   const el=document.createElement("article");
-  el.className="card"; el.tabIndex=0;
-  el.innerHTML=CARD[tool](C().cards)+`<button class="x" aria-label="Close">×</button>`;
+  el.className="card"+(tool==="show_case"?" wide":""); el.tabIndex=0;
+  el.innerHTML=body+`<button class="x" aria-label="Close">×</button>`;
+  el.querySelectorAll(".shots figure").forEach(function(f){
+    f.addEventListener("click",function(){
+      const k=(K.cases||[]).find(x=>x.slug===f.dataset.case);
+      if(k)openShot(k,parseInt(f.dataset.i,10));
+    });
+  });
   el.querySelector(".x").onclick=()=>{el.classList.add("leaving");setTimeout(()=>el.remove(),340)};
   el.onkeydown=e=>{if(e.key==="Escape"){el.classList.add("leaving");setTimeout(()=>el.remove(),340)}};
   el.querySelectorAll("a").forEach(function(a){
@@ -962,6 +1002,22 @@ function addCard(tool){
 }
 function clearCards(){
   [...$("cards").children].forEach(c=>{c.classList.add("leaving");setTimeout(()=>c.remove(),340)});
+}
+
+/* ---------- full view of a single screen ---------- */
+function openShot(k,i){
+  const shots=(k.images||[]).concat(k.diagrams||[]);
+  const s=shots[i]; if(!s)return;
+  track("click",{el:"case_image",slug:k.slug});
+  const ov=document.createElement("div");
+  ov.id="shotview"; ov.tabIndex=0;
+  ov.innerHTML=`<button class="close mono">${C().cards.close}</button>
+    <figure><img src="${s.url}" alt=""><figcaption>${s.caption||""}</figcaption></figure>`;
+  const shut=function(){ov.remove();document.removeEventListener("keydown",esc)};
+  const esc=function(e){if(e.key==="Escape")shut()};
+  ov.onclick=function(e){if(e.target===ov||e.target.classList.contains("close"))shut()};
+  document.addEventListener("keydown",esc);
+  document.body.append(ov); ov.focus();
 }
 
 /* ---------- chips ---------- */
@@ -1043,15 +1099,16 @@ async function connect(){
         open:()=>{setState("listening");setStatus(C().status.listening)},
         you:t=>{ if(t&&t.trim()){ $("you").textContent=t; lastVoiceAt=Date.now(); } },
         her:t=>{                       // her text is the transcript of her own speech
-          herBuf+=t; clearTimeout(herTimer);
+          herBuf+=t;
           setState("responding"); setStatus(C().status.responding);
           render(herBuf);
-          herTimer=setTimeout(()=>{S.log.push({who:"her",text:herBuf});herBuf=""},1200);
         },
-        tool:c=>addCard(c.name),
+        tool:c=>addCard(c.name,c.args||{}),
         interrupted:()=>{setState("interrupted");
           setTimeout(()=>{if(S.voice){setState("listening");setStatus(C().status.listening)}},600)},
         turnComplete:()=>{
+          if(herBuf.trim()){S.log.push({who:"her",text:herBuf})}
+          herBuf="";
           if(S.voice){setState("listening");setStatus(C().status.listening)}
           else{setState("idle");setStatus(C().status.ready)}
           chips();                     // the visitor should never face a blank slate
@@ -1224,9 +1281,11 @@ async function loadPublished(){
     const r=await Promise.all([
       q("profile?select=name,role,summary,location&status=eq.published&limit=1"),
       q("skills?select=name&status=eq.published&order=priority.desc"),
-      q("resumes?select=title,language,version_date,storage_path&status=eq.published&is_primary=eq.true")
+      q("resumes?select=title,language,version_date,storage_path&status=eq.published&is_primary=eq.true"),
+      q("cases?select=name,slug,summary,images,diagrams&status=eq.published&is_confidential=eq.false&order=display_order")
     ]);
-    const prof=r[0], sk=r[1], res=r[2];
+    const prof=r[0], sk=r[1], res=r[2], cs=r[3];
+    if(cs&&cs.length)K.cases=cs;
     if(prof&&prof[0]){
       K.name=prof[0].name||K.name; K.role=prof[0].role||K.role;
       K.location=prof[0].location||K.location;
