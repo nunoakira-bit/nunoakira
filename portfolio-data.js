@@ -19,7 +19,7 @@ const NUNO_DATA = {
 
   meta: {
     version: '1.0.0',
-    updated: '2026-08-22',
+    updated: '2026-08-23',
     aiVersionUrl: '/',                    // botão "voltar para a versão com IA"
     visualVersionUrl: '/visual.html',
     assetsBase: 'assets/'
@@ -37,8 +37,8 @@ const NUNO_DATA = {
       en: 'Open to remote or on-site opportunities'
     },
     headline: {
-      pt: ['Transformo', 'complexidade', 'em experiências', 'simples'],
-      en: ['I turn', 'complexity', 'into simple', 'experiences']
+      pt: ['Transformo', 'ideias', 'em produtos', 'e sistemas'],
+      en: ['I turn', 'ideas', 'into products', 'and systems']
     },
     intro: {
       pt: 'Product Designer Sênior com 16 anos em produtos digitais, UX/UI, design systems, estratégia de produto e prototipagem funcional. Minha formação também passa por design gráfico, branding, direção de arte, motion e visual design.',
@@ -49,11 +49,11 @@ const NUNO_DATA = {
       en: 'Design is about solving problems for people. The goal is to understand the real problem and turn complexity into something simple, elegant and intuitive. Visual quality matters — but a beautiful interface alone is not good design.'
     },
     contact: {
-      email: '__nunoakira@gmail.com',
-      linkedin: '__https://linkedin.com/in/__PREENCHER',
+      email: 'nunoakira@gmail.com',
+      linkedin: 'https://linkedin.com/in/nunosugano-ux',
       github: 'https://github.com/nunoakira-bit',
       site: 'https://www.nunoakira.com.br',
-      resume: '__assets/nuno-akira-sugano-cv.pdf'
+      resume: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/resumes/324aef14-9878-45ca-ba96-a75e9e9a2462/Nuno_Akira_Sugano_CV_PT_2026.pdf'
     }
   },
 
@@ -182,18 +182,17 @@ const NUNO_DATA = {
         en: 'To add: specific screens and workflows, examples of specialist feedback and resulting changes, before/after material, e-ARQ/CONARQ requirements that shaped decisions, and observable outcomes.'
       },
       media: {
-        cover: '__assets/cases/siga/cover.jpg',
+        cover: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/06df324d-5e2d-4dfd-b258-90fad0552c12/enderecamento-escolha-de-localidade.png',
         shots: [
-          { src: '__assets/cases/siga/01.jpg', caption: { pt: 'Placeholder — tela principal', en: 'Placeholder — main screen' } },
-          { src: '__assets/cases/siga/02.jpg', caption: { pt: 'Placeholder — fluxo de classificação', en: 'Placeholder — classification flow' } },
-          { src: '__assets/cases/siga/03.jpg', caption: { pt: 'Placeholder — antes / depois', en: 'Placeholder — before / after' } }
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/06df324d-5e2d-4dfd-b258-90fad0552c12/enderecamento-escolha-de-localidade.png', caption: { pt: 'Endereçamento — escolha da localidade, com capacidade de cada galpão à vista', en: 'Addressing — choosing the location, with each warehouse\'s capacity in view' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/06df324d-5e2d-4dfd-b258-90fad0552c12/criar-tipo-unidade-acondicionamento.png', caption: { pt: 'Criação de tipo de unidade de acondicionamento, com as medidas pré-visualizadas', en: 'Creating a storage unit type, with dimensions previewed as they are typed' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/06df324d-5e2d-4dfd-b258-90fad0552c12/ciclo-de-vida-do-documento.png', caption: { pt: 'Estudo do ciclo de vida do documento arquivístico, anterior a qualquer interface', en: 'Study of the archival document lifecycle, drawn before any interface' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/06df324d-5e2d-4dfd-b258-90fad0552c12/processo-de-enderecamento.png', caption: { pt: 'Processo de endereçamento em cinco passos até o endereço único da unidade', en: 'The five-step addressing process, ending in the unit\'s unique address' } }
         ]
       },
-      links: [
-        { label: { pt: 'Ver produto', en: 'View product' }, url: '__https://', type: 'product' }
-      ],
+      links: [],
       aiCard: {
-        thumb: '__assets/cases/siga/cover.jpg',
+        thumb: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/06df324d-5e2d-4dfd-b258-90fad0552c12/enderecamento-escolha-de-localidade.png',
         tags: ['Complex domain', 'Research', 'Regulated workflows'],
         bullets: {
           pt: [
@@ -268,19 +267,18 @@ const NUNO_DATA = {
         en: 'To add: screens before and after the refactor, Design System examples, component and token documentation, an example of a screen built by development using the system, and examples of intentionally different application identities.'
       },
       media: {
-        cover: '__assets/cases/eos/cover.jpg',
+        cover: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/6528389f-ab02-44ca-8917-19651f1feb74/design-system-index-mcp.png',
         shots: [
-          { src: '__assets/cases/eos/01.jpg', caption: { pt: 'Placeholder — antes / depois do refactor', en: 'Placeholder — before / after refactor' } },
-          { src: '__assets/cases/eos/02.jpg', caption: { pt: 'Placeholder — biblioteca de componentes', en: 'Placeholder — component library' } },
-          { src: '__assets/cases/eos/03.jpg', caption: { pt: 'Placeholder — tokens e fundações', en: 'Placeholder — tokens and foundations' } },
-          { src: '__assets/cases/eos/04.jpg', caption: { pt: 'Placeholder — identidades por aplicação', en: 'Placeholder — per-application identities' } }
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/6528389f-ab02-44ca-8917-19651f1feb74/design-system-index-mcp.png', caption: { pt: 'Índice do design system compartilhado, escrito também para ser lido por um agente de IA', en: 'Index of the shared design system, written to be read by an AI agent as well' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/6528389f-ab02-44ca-8917-19651f1feb74/token-system-cores-css.png', caption: { pt: 'Sistema de tokens de cor, com paletas por produto e exportação para variáveis CSS', en: 'Colour token system, with per-product palettes exported as CSS variables' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/6528389f-ab02-44ca-8917-19651f1feb74/patterns-reutilizaveis.png', caption: { pt: 'Patterns reutilizáveis: tabelas, cadastros, estados vazios, modais e cabeçalhos', en: 'Reusable patterns: tables, forms, empty states, modals and headers' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/6528389f-ab02-44ca-8917-19651f1feb74/tokens-tipografia-e-radius.png', caption: { pt: 'Tokens de tipografia e raio, cada um declarando o uso a que se destina', en: 'Typography and radius tokens, each declaring what it is for' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/6528389f-ab02-44ca-8917-19651f1feb74/figma-estrutura-e-pesquisa-personas.png', caption: { pt: 'Pesquisa de sete papéis em prefeituras brasileiras, com metodologia e fontes declaradas', en: 'Research into seven roles in Brazilian city halls, with stated method and sources' } }
         ]
       },
-      links: [
-        { label: { pt: 'Ver produto', en: 'View product' }, url: '__https://', type: 'product' }
-      ],
+      links: [],
       aiCard: {
-        thumb: '__assets/cases/eos/cover.jpg',
+        thumb: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/6528389f-ab02-44ca-8917-19651f1feb74/design-system-index-mcp.png',
         tags: ['Design Systems', 'Enterprise', 'Governance'],
         bullets: {
           pt: [
@@ -376,20 +374,17 @@ const NUNO_DATA = {
         en: 'To add: manager and broker screens, prototype walkthrough, the pre-mortem artifact, the advertising wizard flow, the onboarding import flow, validation sessions with real agencies, and observable results once the product reaches customers.'
       },
       media: {
-        cover: '__assets/cases/imobia/cover.jpg',
+        cover: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/42032f99-d0c5-4e2f-80db-8847e8788add/entrada-escolha-de-papel.png',
         shots: [
-          { src: '__assets/cases/imobia/01.jpg', caption: { pt: 'Placeholder — dashboard do gestor', en: 'Placeholder — manager dashboard' } },
-          { src: '__assets/cases/imobia/02.jpg', caption: { pt: 'Placeholder — visão do corretor', en: 'Placeholder — broker view' } },
-          { src: '__assets/cases/imobia/03.jpg', caption: { pt: 'Placeholder — assistente de anúncios', en: 'Placeholder — advertising wizard' } },
-          { src: '__assets/cases/imobia/04.jpg', caption: { pt: 'Placeholder — site comercial e planos', en: 'Placeholder — commercial site and plans' } }
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/42032f99-d0c5-4e2f-80db-8847e8788add/entrada-escolha-de-papel.png', caption: { pt: 'Painel do corretor: o que é meu e o que preciso fazer agora', en: 'Agent dashboard: what is mine and what I need to do now' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/42032f99-d0c5-4e2f-80db-8847e8788add/gestor-dashboard.png', caption: { pt: 'Painel do gestor: a mesma operação lida de outro ângulo', en: 'Manager dashboard: the same operation read from another angle' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/42032f99-d0c5-4e2f-80db-8847e8788add/corretor-meus-atendimentos.png', caption: { pt: 'A IA entrega o lead qualificado ao corretor com o contexto já pronto', en: 'The AI hands a qualified lead to the agent with the context already prepared' } },
+        { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/42032f99-d0c5-4e2f-80db-8847e8788add/gestor-equipe.png', caption: { pt: 'Gestão de equipe, visível apenas para o gestor (números de demonstração)', en: 'Team management, visible only to the manager (demonstration figures)' } }
         ]
       },
-      links: [
-        { label: { pt: 'Protótipo funcional', en: 'Functional prototype' }, url: '__https://', type: 'prototype' },
-        { label: { pt: 'Site comercial', en: 'Commercial site' }, url: '__https://', type: 'site' }
-      ],
+      links: [],
       aiCard: {
-        thumb: '__assets/cases/imobia/cover.jpg',
+        thumb: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/42032f99-d0c5-4e2f-80db-8847e8788add/entrada-escolha-de-papel.png',
         tags: ['AI Product Design', 'B2B SaaS', 'Conversational UX'],
         bullets: {
           pt: [
@@ -409,21 +404,100 @@ const NUNO_DATA = {
         },
         deepLink: '/visual.html#case-imobia'
       }
+    },
+
+    /* ============================================================ CASE 04 */
+    {
+      id: 'mercs',
+      index: '04',
+      name: 'Mercs',
+      family: { pt: 'Produto próprio', en: 'Independent product' },
+      status: 'building',
+      accent: '#8CE05A',
+      positioning: {
+        pt: ['AI Product Design', 'B2B SaaS', 'UX conversacional', 'Regras comerciais seguras'],
+        en: ['AI Product Design', 'B2B SaaS', 'Conversational UX', 'Safe commercial rules']
+      },
+      question: {
+        pt: 'Como deixar uma IA negociar uma venda real — com preços, descontos e compromissos — sem nunca deixá-la decidir quais são esses números?',
+        en: 'How do you let an AI negotiate a real sale — with prices, discounts and commitments attached — without ever letting it decide what those numbers are?'
+      },
+      oneLiner: {
+        pt: 'A IA argumenta. O sistema decide.',
+        en: 'The AI argues. The system decides.'
+      },
+      story: [
+        { key: 'context', label: { pt: 'Contexto', en: 'Context' }, body: {
+          pt: 'Mercs é um SaaS B2B para pequenos e médios negócios brasileiros que já vendem por WhatsApp. Um agente de IA recebe as conversas, responde sobre os produtos que o lojista cadastrou, negocia dentro da margem que o dono definiu, fecha a venda e devolve a conversa para o humano. Esses comerciantes não perdem venda por falta de canal: perdem porque o lead chega a qualquer hora e a qualidade da negociação depende de quem estiver livre para responder.',
+          en: 'Mercs is a B2B SaaS platform for small and mid-sized Brazilian businesses already selling through WhatsApp. An AI agent receives inbound conversations, answers questions about the products the merchant registered, negotiates within the margin the owner defined, closes the sale and hands the conversation back to a human. These merchants do not lose sales for lack of a channel: they lose them because leads arrive at all hours and the quality of a negotiation depends on whoever happens to be free.' } },
+        { key: 'problem', label: { pt: 'O problema', en: 'The problem' }, body: {
+          pt: 'Uma IA que fala sobre dinheiro é um produto diferente de uma IA que responde perguntas. Uma frase errada sobre prazo de entrega é uma experiência ruim; uma frase errada sobre desconto é um desconto que o lojista terá de honrar. Modelos de linguagem são fluentes, concordantes e — sob pressão de um cliente insistente — negociáveis. São exatamente as propriedades erradas para a parte da conversa que envolve preço e margem. O problema de adoção não era qualidade de interface: era se dava para confiar o comercial ao sistema.',
+          en: 'An AI that talks about money is a different product from an AI that answers questions. A wrong sentence about delivery is a poor experience; a wrong sentence about a discount is a discount the merchant has to honour. Language models are fluent, agreeable and — under pressure from a persistent customer — negotiable. Those are precisely the wrong properties for the part of a conversation involving price and margin. The adoption problem was not interface quality: it was whether the commercial conversation could be trusted to the system at all.' } },
+        { key: 'role', label: { pt: 'Meu papel', en: 'My role' }, body: {
+          pt: 'Criei o produto do zero, sozinho: definição do problema, perfil de cliente ideal, estratégia de produto e comercial, arquitetura de informação, UX/UI do painel, design conversacional do agente — identidade, tom, formato de mensagem, comportamento de negociação e fechamento —, as regras comerciais que o sistema aplica, o site e o produto funcionando, construído em código com apoio de IA. Exposição jurídica, obrigações regulatórias e custo de operação foram tratados como material de design, não como detalhes de engenharia a resolver depois.',
+          en: 'I created the product from scratch as sole founder: problem framing, ideal customer profile, product and commercial strategy, information architecture, panel UX/UI, conversational design for the agent — identity, tone, message format, negotiation and closing behaviour — the commercial rules the system enforces, the marketing site, and the working product built in code with AI assistance. Legal exposure, regulatory obligations and operating cost were treated as design material rather than engineering details to resolve later.' } },
+        { key: 'discovery', label: { pt: 'Começar pelas falhas', en: 'Starting from the failures' }, body: {
+          pt: 'Em vez de partir de telas, parti das formas como o agente poderia falhar. Construí dois comerciantes de teste completos — uma loja de hardware com vinte produtos e uma operadora de planos de saúde com seis planos — para exercitar o agente contra catálogos, regras de preço, variantes e perguntas reais, junto de um simulador público que tornava cada conversa observável. O modo como ele falhava moldou a arquitetura muito mais do que qualquer lista de funcionalidades moldaria.',
+          en: 'Rather than starting from screens, I started from the ways the agent could fail. I built two complete test merchants — a computer-hardware retailer with a twenty-product catalogue and a health-plan provider with six plans — to exercise the agent against realistic catalogues, price rules, variants and customer questions, alongside a public simulator that made every conversation observable. How it failed shaped the architecture far more than any feature list would have.' } },
+        { key: 'decisions', label: { pt: 'A decisão central', en: 'The central decision' }, body: {
+          pt: 'O agente nunca escreve um número. Quando o cliente pede desconto, o modelo emite um marcador oculto informando apenas o que foi pedido. O backend calcula a oferta em centavos inteiros, aplica estratégia, faixas de quantidade, teto e piso, e escreve ele mesmo a frase comercial. Um guardrail determinístico depois lê o que o modelo escreveu, procurando percentuais e valores que rompam o teto ou fiquem abaixo do piso. Considerei substituir essa camada por um laço de tool calling em que o modelo pede o preço. Rejeitei: validação que roda depois da geração é uma fronteira, enquanto uma ferramenta que o modelo escolhe chamar é uma sugestão.',
+          en: 'The agent never authors a number. When a customer asks for a discount, the model emits a hidden marker stating only what was requested. The backend calculates the offer in integer cents, applies the strategy, quantity bands, ceiling and floor, and writes the commercial sentence itself. A deterministic guardrail then reads what the model wrote, scanning for percentages and values that break the ceiling or fall below the floor. I considered replacing that layer with a tool-calling loop where the model requests a price. I rejected it: validation that runs after generation is a boundary, while a tool the model chooses to call is a suggestion.' } },
+        { key: 'silence', label: { pt: 'Silêncio em vez de invenção', en: 'Silence over invention' }, body: {
+          pt: 'A recuperação de conhecimento é restrita ao lojista e ao produto ativo, com limiar de similaridade. Quando nada passa do limiar, o prompt carrega um bloco explícito de "sem evidência no material cadastrado", e o agente diz que vai confirmar com a equipe em vez de completar a resposta com conhecimento pré-treinado. Ambiguidade também é estrutural, não instrução: quando a frase do cliente casa com duas variantes e não há nada que as distinga, o sistema não troca de produto, não faz oferta e não fecha — apresenta os candidatos e pergunta.',
+          en: 'Retrieval is scoped to the merchant and the active product, with a similarity threshold. When nothing passes it, the prompt carries an explicit "no evidence in the registered material" block, and the agent says it will confirm with the team instead of completing the answer from pre-trained knowledge. Ambiguity is structural rather than instructional: when a customer\'s phrasing matches two variants and contains nothing to distinguish them, the system does not switch product, does not make an offer and does not close — it presents the candidates and asks.' } },
+        { key: 'scope', label: { pt: 'Entregar menos em vez de prometer mais', en: 'Shipping less rather than promising more' }, body: {
+          pt: 'A versão um sai sem pagamento integrado. Uma única chave suspende o caminho de cobrança: a seção de pagamentos aparece como "em breve" e desabilitada, e quando o agente fecha uma venda ele alerta o dono e envia ao cliente uma mensagem de espera. Nenhuma tela e nenhuma frase promete um link de pagamento que o produto ainda não consegue gerar.',
+          en: 'Version one ships without integrated payment. A single flag suspends the charging path: the payments section is labelled as coming soon and disabled, and when the agent closes a sale it alerts the owner and sends the customer a holding message. No screen and no sentence promises a payment link the product cannot yet produce.' } },
+        { key: 'validation', label: { pt: 'Validação', en: 'Validation' }, body: {
+          pt: 'As regras comerciais vivem num único módulo compartilhado entre o sistema em execução e a suíte de testes, de modo que a regra que decide um preço em produção é a mesma que os testes exercitam — cerca de trinta casos cobrindo os cenários de negociação. Incidentes foram tratados como retorno de design, e produziram uma lição consistente: o sintoma relatado quase nunca é a causa. O produto ainda não foi validado com lojistas reais, e essa validação não é reivindicada aqui.',
+          en: 'The commercial rules live in a single module shared by the running system and its test suite, so the rule that decides a price in production is the one the tests exercise — roughly thirty cases covering the required negotiation scenarios. Incidents were treated as design feedback, and produced a consistent lesson: the reported symptom is rarely the cause. The product has not yet been validated with real merchants, and that validation is not claimed here.' } },
+        { key: 'demonstrates', label: { pt: 'O que este case demonstra', en: 'What this case demonstrates' }, body: {
+          pt: 'O design de um produto de IA em que a confiabilidade é propriedade do sistema, e não esperança sobre o modelo: separar o que a IA pode dizer do que só o código pode decidir, projetar para os modos de falha de um modelo de linguagem num contexto comercial, tratar regulação, privacidade e custo como restrições de design, e escolher entregar um produto menor e honesto em vez de um maior e prometido.',
+          en: 'The design of an AI product where reliability is a property of the system rather than a hope about the model: separating what the AI may say from what only code may decide, designing for the failure modes of a language model in a commercial setting, treating regulation, privacy and cost as design constraints, and choosing to ship a smaller honest product instead of a larger promised one.' } }
+      ],
+      takeaway: {
+        pt: 'Confiança em um produto de IA não se constrói fazendo o modelo soar mais seguro. Constrói-se decidindo, de antemão, quais frases o modelo não tem permissão para escrever.',
+        en: 'Trust in an AI product is not built by making the model sound more confident. It is built by deciding, in advance, which sentences the model is not allowed to write.'
+      },
+      evidenceTodo: {
+        pt: 'A adicionar: diagrama do caminho da negociação, da mensagem ao guardrail e ao fechamento; fluxo de conexão do WhatsApp; exemplos de conversa com tentativa de desconto bloqueada; fluxo de alerta e transferência; sessões de validação com lojistas reais e custo observado por conversa.',
+        en: 'To add: a diagram of the negotiation path from message to guardrail to closing; the WhatsApp connection flow; conversation examples including a blocked discount attempt; the alert and handover flow; validation sessions with real merchants and observed cost per conversation.'
+      },
+      media: {
+        cover: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/d8089de7-e259-4304-9a74-3a267f72ebbd/landing-demonstracao-ao-vivo.png',
+        shots: [
+          { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/d8089de7-e259-4304-9a74-3a267f72ebbd/cadastro-produto-limite-de-desconto.png', caption: { pt: 'Cadastro de produto: é aqui que mora a autoridade comercial — preço, teto de desconto e piso calculado', en: 'Product registration: where commercial authority lives — price, discount ceiling and calculated floor' } },
+          { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/d8089de7-e259-4304-9a74-3a267f72ebbd/conversa-whatsapp-planos.png', caption: { pt: 'Conversa real: o agente compara planos e admite não ter um detalhe em vez de preenchê-lo', en: 'A real conversation: the agent compares plans and admits a missing detail instead of filling it in' } },
+          { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/d8089de7-e259-4304-9a74-3a267f72ebbd/demo-interativa-como-negocia.png', caption: { pt: 'Demonstração ao vivo no site: quem calcula o preço é o sistema, a IA apenas argumenta', en: 'Live demo on the site: the system calculates the price, the AI only argues' } },
+          { src: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/d8089de7-e259-4304-9a74-3a267f72ebbd/painel-dashboard-do-gestor.png', caption: { pt: 'Painel do lojista, com o interruptor que devolve o atendimento ao humano (números de demonstração)', en: 'Merchant panel, with the switch that returns the conversation to a human (demonstration figures)' } }
+        ]
+      },
+      links: [],
+      aiCard: {
+        thumb: 'https://oupeamarlnmnvezejwpz.supabase.co/storage/v1/object/public/case-media/d8089de7-e259-4304-9a74-3a267f72ebbd/landing-demonstracao-ao-vivo.png',
+        tags: ['AI Product Design', 'B2B SaaS', 'Conversational UX'],
+        bullets: {
+          pt: [
+            'Criou o produto inteiro sozinho, do problema ao código funcionando.',
+            'A IA argumenta; preço, teto e piso são decididos por código determinístico.',
+            'Guardrail lê o que o modelo escreveu antes de enviar; violação vira alerta.',
+            'Versão um sem pagamento integrado: nenhuma tela promete o que não existe.'
+          ],
+          en: [
+            'Created the entire product alone, from problem framing to working code.',
+            'The AI argues; price, ceiling and floor are decided by deterministic code.',
+            'A guardrail reads what the model wrote before sending; violations raise alerts.',
+            'Version one ships without payment: no screen promises what does not exist.'
+          ]
+        },
+        deepLink: '/visual.html#case-mercs'
+      }
     }
+
   ],
 
   /* ------------------------------------------------- CASES EM CONSTRUÇÃO */
   upcoming: [
-    {
-      id: 'mercs',
-      name: 'Mercs',
-      accent: '#FFB35C',
-      oneLiner: {
-        pt: 'Um agente de vendas com IA que comunica e persuade enquanto sistemas determinísticos mantêm o controle sobre preços, descontos, fatos do produto, compatibilidade e margem.',
-        en: 'An AI sales agent that communicates and persuades while deterministic systems retain control over prices, discounts, product facts, compatibility and margin.'
-      },
-      focus: { pt: 'AI Product Design · UX conversacional · Regras comerciais seguras', en: 'AI Product Design · Conversational UX · Safe commercial rules' }
-    },
     {
       id: 'mercs-mkt',
       name: 'Mercs MKT',
