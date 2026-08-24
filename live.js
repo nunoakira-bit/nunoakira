@@ -17,12 +17,13 @@ const IN_RATE = 16000;    // what the API expects from the mic
 const OUT_RATE = 24000;   // what it sends back
 
 export class LiveSession {
-  constructor({ functionUrl, anonKey, language = "en", sessionId, stream, on = {} }) {
+  constructor({ functionUrl, anonKey, language = "en", sessionId, stream, audioCtx, on = {} }) {
     this.functionUrl = functionUrl;
     this.anonKey = anonKey;
     this.language = language;
     this.sessionId = sessionId || crypto.randomUUID();
     this.shared = stream || null;      // reuse the grant the page already has
+    this.outCtx = audioCtx || null;    // reuse the context unlocked by the tap
     this.on = on;
     this.session = null;
     this.running = false;
@@ -51,8 +52,14 @@ export class LiveSession {
   // Playback only. The microphone is attached later, and only if the visitor
   // asks for it — opening the link must never trigger a permission prompt.
   async openOutput() {
-    this.outCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: OUT_RATE });
-    if (this.outCtx.state === "suspended") await this.outCtx.resume();
+    // A context created here would be born suspended on mobile: by this point
+    // the tap that started the session is long over. The page hands us one it
+    // unlocked inside the gesture instead.
+    if (!this.outCtx) {
+      this.outCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: OUT_RATE });
+    }
+    if (this.outCtx.state === "suspended") { try { await this.outCtx.resume(); } catch (_) {} }
+    this.silent = this.outCtx.state !== "running";
     this.gain = this.outCtx.createGain();
     this.gain.connect(this.outCtx.destination);
   }
@@ -100,7 +107,15 @@ export class LiveSession {
     this.inCtx = null;
   }
 
+  // Something arrived to be played: if the context is still blocked, the page
+  // needs to know so it can ask for a tap.
+  audible() { return !!this.outCtx && this.outCtx.state === "running"; }
+
   play(bytes) {
+    if (this.outCtx && this.outCtx.state === "suspended") {
+      this.outCtx.resume().catch(function(){});
+      this.emit("blocked");
+    }
     const pcm = new Int16Array(bytes.buffer, bytes.byteOffset, bytes.byteLength / 2);
     const buf = this.outCtx.createBuffer(1, pcm.length, OUT_RATE);
     const ch = buf.getChannelData(0);
@@ -192,8 +207,9 @@ export class LiveSession {
     // Only stop tracks we opened ourselves — killing a shared stream would make
     // the browser prompt for the microphone all over again.
     if (this.stream && this.stream !== this.shared) this.stream.getTracks().forEach(t => t.stop());
-    try { this.outCtx?.close(); } catch (_) {}
+    // The context belongs to the page and is reused across sessions.
     this.session = null; this.level = 0;
+    this.gain = null; this.playhead = 0;
     this.emit("stopped");
   }
 }

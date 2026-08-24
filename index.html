@@ -426,7 +426,7 @@ pt:{code:"pt-BR",tag:"PT",
   gate:{eyebrow:"Product Design · Curitiba, Brasil",sub:"e uma de suas criaturas",
     line:"Transformo ideias em produtos e sistemas complexos em experiências claras, escaláveis e testáveis.",
     enter:"Explorar com a IA",resume:"Baixar currículo"},
-  status:{ready:"Pronta",listening:"Escutando",thinking:"Pensando",responding:"Respondendo",
+  status:{tapSound:"Toque na tela para ativar o som",ready:"Pronta",listening:"Escutando",thinking:"Pensando",responding:"Respondendo",
     denied:"Microfone bloqueado",ended:"Sessão de voz encerrada",text:"Modo texto"},
   bar:{visual:"Portfólio visual",transcript:"Transcrição",sound:"Som ligado",muted:"Som desligado"},
   chips:["Fale sobre a experiência do Nuno","Quais são suas competências?","Como ele usa IA em design?",
@@ -469,7 +469,7 @@ en:{code:"en-US",tag:"EN",
   gate:{eyebrow:"Product Design · Curitiba, Brazil",sub:"and one of his creatures",
     line:"I turn ideas into products, and complex systems into clear, scalable and testable experiences.",
     enter:"Explore with AI",resume:"Download résumé"},
-  status:{ready:"Ready",listening:"Listening",thinking:"Thinking",responding:"Responding",
+  status:{tapSound:"Tap the screen to enable sound",ready:"Ready",listening:"Listening",thinking:"Thinking",responding:"Responding",
     denied:"Microphone blocked",ended:"Voice session ended",text:"Text mode"},
   bar:{visual:"Visual portfolio",transcript:"Transcript",sound:"Sound on",muted:"Sound off"},
   chips:["Tell me about Nuno's experience","What are his strongest skills?","How does he use AI in product design?",
@@ -512,7 +512,7 @@ ja:{code:"ja-JP",tag:"JA",
   gate:{eyebrow:"プロダクトデザイン · ブラジル、クリチバ",sub:"そして彼が生んだ存在のひとつ",
     line:"アイデアをプロダクトに、複雑なシステムを明快で拡張性があり検証できる体験に変えています。",
     enter:"AIと対話する",resume:"履歴書をダウンロード"},
-  status:{ready:"待機中",listening:"聞いています",thinking:"考えています",responding:"応答中",
+  status:{tapSound:"画面をタップして音声を有効にしてください",ready:"待機中",listening:"聞いています",thinking:"考えています",responding:"応答中",
     denied:"マイクが使えません",ended:"音声セッション終了",text:"テキストモード"},
   bar:{visual:"ビジュアル版",transcript:"記録",sound:"音声オン",muted:"音声オフ"},
   chips:["ヌノの経験について","得意な領域は？","デザインでAIをどう使いますか？",
@@ -952,7 +952,7 @@ async function ask(q){
   $("you").textContent=q; S.log.push({who:"you",text:q});
   $("field").value=""; $("chips").innerHTML="";
   setState("thinking"); setStatus(C().status.thinking);
-  herBuf="";                           // a new question starts a new answer
+  herBuf=""; spoke=false; clearTimeout(watchdog);
   turns++;
   track("asked",{text:q,turn:turns,mode:S.voice?"voice":"text",source:source});
   source="typed";
@@ -1082,7 +1082,24 @@ function buildRec(){
   r.onend=()=>{ if(S.voice){try{r.start()}catch(_){}} };  // keep the ear open
   return r;
 }
-let live=null, herBuf="", herTimer=null;
+let live=null, herBuf="", herTimer=null, outCtx=null, spoke=false, watchdog=null;
+
+// Browsers only allow audio to start inside a real user gesture. Everything
+// after an await has left that gesture behind, so the context is created and
+// unlocked here — synchronously — the first time the visitor taps anything.
+function unlockAudio(){
+  try{
+    if(!outCtx) outCtx=new (window.AudioContext||window.webkitAudioContext)({sampleRate:24000});
+    if(outCtx.state==="suspended") outCtx.resume();
+    // iOS needs a sound to actually play before it considers the context live.
+    const b=outCtx.createBuffer(1,1,22050);
+    const s=outCtx.createBufferSource(); s.buffer=b; s.connect(outCtx.destination); s.start(0);
+  }catch(_){}
+  return outCtx;
+}
+// Any tap anywhere is a chance to recover a context the browser suspended.
+addEventListener("pointerdown",function(){ if(outCtx&&outCtx.state==="suspended")outCtx.resume(); },
+  {capture:true});
 
 // The real link. Falls back to the local demo brain when no backend is set.
 let reviving=false;
@@ -1094,11 +1111,12 @@ async function connect(){
   try{
     live=new window.LiveSession({
       functionUrl:window.CONFIG.FUNCTION_URL, anonKey:window.CONFIG.ANON_KEY,
-      language:S.lang, sessionId:sessionKey(), stream:micStream,
+      language:S.lang, sessionId:sessionKey(), stream:micStream, audioCtx:unlockAudio(),
       on:{
         open:()=>{setState("listening");setStatus(C().status.listening)},
         you:t=>{ if(t&&t.trim()){ $("you").textContent=t; lastVoiceAt=Date.now(); } },
         her:t=>{                       // her text is the transcript of her own speech
+          spoke=true; clearTimeout(watchdog);
           herBuf+=t;
           setState("responding"); setStatus(C().status.responding);
           render(herBuf);
@@ -1114,6 +1132,7 @@ async function connect(){
           chips();                     // the visitor should never face a blank slate
         },
         error:()=>{setState("error");setStatus(C().status.ready)},
+        blocked:()=>{ setStatus(C().status.tapSound); },
         goAway:()=>revive(),          // the server warns before it closes
         close:()=>revive()
       }
@@ -1220,10 +1239,10 @@ function chooseLang(l){
   },430);
 }
 document.querySelectorAll(".langs button").forEach(function(b){
-  b.onclick=function(){ chooseLang(b.dataset.l) };
+  b.onclick=function(){ unlockAudio(); chooseLang(b.dataset.l) };
 });
 
-$("enter").onclick=function(){ track("entered",{}); hideGate(); begin(S.lang); };
+$("enter").onclick=function(){ unlockAudio(); track("entered",{}); hideGate(); begin(S.lang); };
 
 // The résumé button hands over the file, not a conversation about the file.
 $("dl").onclick=async function(){
@@ -1326,7 +1345,19 @@ function begin(l){
   connect().then(function(ok){
     if(ok===true){
       // She says the opening line herself, in her own voice.
+      spoke=false;
       live.send("__open__");
+      clearTimeout(watchdog);
+      watchdog=setTimeout(function(){
+        if(spoke)return;
+        // Connected, but nothing came through. Rather than sit on "thinking",
+        // fall back to the local script so the entrance still happens.
+        if(live&&!live.audible())setStatus(C().status.tapSound);
+        setState("responding"); setStatus(C().status.responding);
+        render(C().open); speak(C().open); S.log.push({who:"her",text:C().open});
+        setTimeout(function(){ setState("idle"); setStatus(C().status.ready); chips(); },
+          Math.min(2400+C().open.length*30,9000));
+      },9000);
       return;
     }
     // No link: the local script keeps the entrance whole.
@@ -1342,6 +1373,7 @@ function begin(l){
 /* ---------- controls ---------- */
 $("composer").onsubmit=e=>{e.preventDefault();ask($("field").value)};
 $("mic").onclick=()=>{
+  unlockAudio();
   track("click",{el:S.voice?"mic_stop":"mic_start"});
   S.voice?stopVoice(false):startVoice();
 };
