@@ -51,8 +51,11 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #sig{font-family:var(--display);font-weight:300;font-size:15px;letter-spacing:.01em}
 #sig em{font-style:italic;color:var(--bone-dim)}
 .bartools{display:flex;gap:20px;align-items:center}
-.bartools button{color:var(--bone-faint);transition:color .3s}
-.bartools button:hover,.bartools button[aria-pressed=true]{color:var(--bone)}
+.bartools button,.bartools a{color:var(--bone-faint);transition:color .3s;text-decoration:none}
+.bartools button:hover,.bartools a:hover,.bartools button[aria-pressed=true]{color:var(--bone)}
+#visualbtn{padding-right:20px;margin-right:-8px;position:relative}
+#visualbtn::after{content:"";position:absolute;right:8px;top:50%;width:1px;height:11px;
+  background:var(--line);transform:translateY(-50%)}
 
 #center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
   padding:0 26px 0;min-height:0}
@@ -134,7 +137,18 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .round:hover{border-color:rgba(239,233,222,.3);background:rgba(239,233,222,.05)}
 .round svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.4;
   stroke-linecap:round;stroke-linejoin:round}
-#mic.live{background:rgba(194,162,120,.14);border-color:rgba(194,162,120,.6);color:var(--brass)}
+#mic{position:relative}
+#mic.live{background:rgba(194,162,120,.16);border-color:var(--brass);color:var(--brass);
+  transform:scale(var(--lvl,1))}
+#mic.live::before{content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:1px solid rgba(194,162,120,.55);animation:ring 1.7s ease-out infinite}
+#mic.live::after{content:"";position:absolute;inset:-14px;border-radius:50%;
+  border:1px solid rgba(194,162,120,.28);animation:ring 1.7s ease-out .55s infinite}
+@keyframes ring{0%{transform:scale(.86);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+#you.rec{color:var(--brass);font-size:12px;letter-spacing:.06em}
+#you.rec::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--brass);margin-right:9px;vertical-align:middle;animation:pulse 1.2s ease-in-out infinite}
+#status.rec{color:var(--brass)}
 #send{color:var(--bone-dim)}
 
 #statusline{display:flex;align-items:center;gap:10px;margin-top:14px;height:14px;color:var(--bone-faint)}
@@ -264,6 +278,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   <header id="topbar">
     <div id="sig">Nuno Akira Sugano <em id="sigrole">— Senior Product Designer</em></div>
     <div class="bartools mono">
+      <a id="visualbtn" href="./visual.html">Portfolio</a>
       <button id="langbtn">EN</button>
       <button id="tbtn" aria-pressed="false">Transcript</button>
       <button id="mutebtn" aria-pressed="false">Sound on</button>
@@ -385,14 +400,16 @@ const K = {
    ============================================================ */
 const T = {
 pt:{code:"pt-BR",tag:"PT",
-  open:"Olá. Eu sou mais uma das criaturas surgidas da mente do Nuno. Estou aqui para apresentar um pouco sobre ele, sua experiência e as coisas que ele cria. O que você gostaria de conhecer primeiro?",
+  open:"Olá. Eu sou mais uma das criaturas surgidas da mente do Nuno. Estou aqui para apresentar um pouco sobre ele, sua experiência, alguns cases e o modo como ele trabalha. O que você gostaria de conhecer primeiro?",
   ph:"Escreva sua pergunta",
+  rec:{on:"Gravando",off:"Microfone desligado",hint:"Fale — solto, sem pressa"},
+  idleStop:"Desliguei o microfone depois de um tempo em silêncio. Toque no ícone quando quiser voltar a falar.",
   gate:{eyebrow:"Product Design · Curitiba, Brasil",sub:"e uma de suas criaturas",
-    line:"Transformo sistemas complexos e tecnologias emergentes em experiências de produto claras, escaláveis e testáveis.",
+    line:"Transformo ideias em produtos e sistemas complexos em experiências claras, escaláveis e testáveis.",
     enter:"Explorar com a IA",resume:"Baixar currículo"},
   status:{ready:"Pronta",listening:"Escutando",thinking:"Pensando",responding:"Respondendo",
     denied:"Microfone bloqueado",ended:"Sessão de voz encerrada",text:"Modo texto"},
-  bar:{transcript:"Transcrição",sound:"Som ligado",muted:"Som desligado"},
+  bar:{visual:"Portfólio visual",transcript:"Transcrição",sound:"Som ligado",muted:"Som desligado"},
   chips:["Fale sobre a experiência do Nuno","Quais são suas competências?","Como ele usa IA em design?",
     "Como ele trabalha com design systems?","Como ele colabora com devs?","Por que o Japão?",
     "Que idiomas ele fala?","Como entro em contato?","Posso baixar o currículo?"],
@@ -426,14 +443,16 @@ pt:{code:"pt-BR",tag:"PT",
     resumePending:"O PDF ainda não foi enviado. Assim que Nuno publicar a versão, o download aparece aqui."}
 },
 en:{code:"en-US",tag:"EN",
-  open:"Hello. I'm another creature born from Nuno's mind. I'm here to introduce you to his experience, his work and the things he creates. What would you like to explore first?",
+  open:"Hello. I'm another creature born from Nuno's mind. I'm here to introduce you to his experience, some of his cases and the way he works. What would you like to explore first?",
   ph:"Type your question",
+  rec:{on:"Recording",off:"Microphone off",hint:"Go ahead — take your time"},
+  idleStop:"I turned the microphone off after a stretch of silence. Tap the icon whenever you want to speak again.",
   gate:{eyebrow:"Product Design · Curitiba, Brazil",sub:"and one of his creatures",
-    line:"I turn complex systems and emerging technologies into clear, scalable and testable product experiences.",
+    line:"I turn ideas into products, and complex systems into clear, scalable and testable experiences.",
     enter:"Explore with AI",resume:"Download résumé"},
   status:{ready:"Ready",listening:"Listening",thinking:"Thinking",responding:"Responding",
     denied:"Microphone blocked",ended:"Voice session ended",text:"Text mode"},
-  bar:{transcript:"Transcript",sound:"Sound on",muted:"Sound off"},
+  bar:{visual:"Visual portfolio",transcript:"Transcript",sound:"Sound on",muted:"Sound off"},
   chips:["Tell me about Nuno's experience","What are his strongest skills?","How does he use AI in product design?",
     "How does he work with design systems?","How does he collaborate with developers?","Why is he interested in Japan?",
     "What languages does he speak?","How can I contact him?","Can I download his résumé?"],
@@ -467,14 +486,16 @@ en:{code:"en-US",tag:"EN",
     resumePending:"The PDF hasn't been uploaded yet. As soon as Nuno publishes a version, the download appears here."}
 },
 ja:{code:"ja-JP",tag:"JA",
-  open:"こんにちは。私は、ヌノの発想から生まれた存在のひとつです。彼の経験や仕事、そして彼が生み出してきたものをご紹介します。まず、何から知りたいですか？",
+  open:"こんにちは。私は、ヌノの発想から生まれた存在のひとつです。彼の経験や事例、そして彼の仕事の進め方をご紹介します。まず、何から知りたいですか？",
   ph:"質問を入力してください",
+  rec:{on:"録音中",off:"マイク オフ",hint:"どうぞ、ゆっくりお話しください"},
+  idleStop:"しばらく音声がなかったのでマイクをオフにしました。話すときはアイコンを押してください。",
   gate:{eyebrow:"プロダクトデザイン · ブラジル、クリチバ",sub:"そして彼が生んだ存在のひとつ",
-    line:"複雑なシステムと新しい技術を、明快で拡張性があり、検証できるプロダクト体験に変えています。",
+    line:"アイデアをプロダクトに、複雑なシステムを明快で拡張性があり検証できる体験に変えています。",
     enter:"AIと対話する",resume:"履歴書をダウンロード"},
   status:{ready:"待機中",listening:"聞いています",thinking:"考えています",responding:"応答中",
     denied:"マイクが使えません",ended:"音声セッション終了",text:"テキストモード"},
-  bar:{transcript:"記録",sound:"音声オン",muted:"音声オフ"},
+  bar:{visual:"ビジュアル版",transcript:"記録",sound:"音声オン",muted:"音声オフ"},
   chips:["ヌノの経験について","得意な領域は？","デザインでAIをどう使いますか？",
     "デザインシステムへの取り組みは？","開発者との協働は？","なぜ日本に関心が？",
     "話せる言語は？","連絡方法は？","履歴書はありますか？"],
@@ -581,13 +602,13 @@ const C=()=>T[S.lang];
 
 /* ---------- creature state machine ---------- */
 const PRESET={
-  idle:      {amp:.16,freq:1.55,speed:.14,glow:.42,spin:.045,mix:.10,shell:.55},
-  listening: {amp:.26,freq:2.30,speed:.30,glow:.72,spin:.10, mix:.48,shell:1.00},
-  thinking:  {amp:.40,freq:3.70,speed:.85,glow:.60,spin:.34, mix:.24,shell:.80},
-  responding:{amp:.34,freq:1.95,speed:.46,glow:1.00,spin:.14, mix:.86,shell:.92},
-  interrupted:{amp:.12,freq:1.70,speed:.09,glow:.34,spin:.02, mix:.20,shell:.45},
-  error:     {amp:.10,freq:2.90,speed:.06,glow:.30,spin:.01, mix:.00,shell:.30},
-  ended:     {amp:.08,freq:1.35,speed:.05,glow:.20,spin:.015,mix:.05,shell:.22}
+  idle:      {amp:.14,freq:1.50,speed:.12,glow:.38,spin:.040,mix:.08,shell:.50},
+  listening: {amp:.36,freq:2.65,speed:.42,glow:1.05,spin:.13, mix:.66,shell:1.35},
+  thinking:  {amp:.56,freq:4.30,speed:1.25,glow:.72,spin:.62, mix:.18,shell:1.00},
+  responding:{amp:.48,freq:2.05,speed:.60,glow:1.45,spin:.17, mix:.98,shell:1.25},
+  interrupted:{amp:.10,freq:1.70,speed:.07,glow:.28,spin:.015,mix:.18,shell:.38},
+  error:     {amp:.09,freq:3.10,speed:.05,glow:.26,spin:.01, mix:.00,shell:.26},
+  ended:     {amp:.07,freq:1.30,speed:.04,glow:.18,spin:.012,mix:.04,shell:.20}
 };
 let target={...PRESET.idle}, cur={...PRESET.idle}, audioLevel=0;
 function setState(n){
@@ -774,7 +795,8 @@ function frame(){
   U.uTime.value+=dt*(RM?.25:1)*cur.speed*3.2;
   for(const k of["amp","freq","glow","spin","mix","shell"]) cur[k]+=(target[k]-cur[k])*Math.min(dt*3.2,1);
   const src=live? Math.max(live.level, live.outLevel*1.25) : micLevel;
-  audioLevel+=((S.voice?src:0)-audioLevel)*Math.min(dt*8,1);
+  audioLevel+=((S.voice?src:0)-audioLevel)*Math.min(dt*9,1);
+  document.documentElement.style.setProperty("--lvl",(1+Math.min(audioLevel,1.2)*.55).toFixed(3));
   U.uAmp.value=cur.amp; U.uFreq.value=cur.freq; U.uGlow.value=cur.glow;
   U.uMix.value=cur.mix; U.uShell.value=cur.shell; U.uLevel.value=audioLevel;
   U.uWake.value+=((S.state==="idle"&&!started?0:1)-U.uWake.value)*Math.min(dt*1.6,1);
@@ -899,6 +921,9 @@ async function ask(q){
   $("you").textContent=q; S.log.push({who:"you",text:q});
   $("field").value=""; $("chips").innerHTML="";
   setState("thinking"); setStatus(C().status.thinking);
+  turns++;
+  track("asked",{text:q,turn:turns,mode:S.voice?"voice":"text",source:source});
+  source="typed";
   const linked=await connect();
   if(linked===true&&live&&live.running){ live.send(q); return; }
   const m=match(q);
@@ -914,11 +939,24 @@ async function ask(q){
 /* ---------- cards ---------- */
 function addCard(tool){
   if(!CARD[tool])return;
+  track("card",{tool:tool});
   const el=document.createElement("article");
   el.className="card"; el.tabIndex=0;
   el.innerHTML=CARD[tool](C().cards)+`<button class="x" aria-label="Close">×</button>`;
   el.querySelector(".x").onclick=()=>{el.classList.add("leaving");setTimeout(()=>el.remove(),340)};
   el.onkeydown=e=>{if(e.key==="Escape"){el.classList.add("leaving");setTimeout(()=>el.remove(),340)}};
+  el.querySelectorAll("a").forEach(function(a){
+    a.addEventListener("click",function(){
+      const dl=a.classList.contains("dl");
+      track(dl?"resume":"click",
+        dl?{from:"card",lang:K.resume&&K.resume.language}
+           :{el:"contact_link",kind:(a.getAttribute("href")||"").split(":")[0],
+             label:(a.textContent||"").trim().slice(0,60)});
+    });
+  });
+  el.querySelector(".x").addEventListener("click",function(){
+    track("click",{el:"card_close",tool:tool});
+  });
   $("cards").prepend(el);
   while($("cards").children.length>3)$("cards").lastElementChild.remove();
 }
@@ -933,15 +971,28 @@ function chips(){
   pool.forEach((t,i)=>{
     const b=document.createElement("button");
     b.textContent=t; b.style.animationDelay=(i*70+200)+"ms";
-    b.onclick=()=>ask(t); box.append(b);
+    b.onclick=()=>{ source="chip"; track("click",{el:"suggestion",text:t}); ask(t) };
+    box.append(b);
   });
 }
 
 /* ============================================================
    SESSION BUDGET — voice is capped per session, then falls to text
    ============================================================ */
-const BUDGET=480, WARN=60;
+const BUDGET=480, WARN=60, SILENCE_MS=30000;
+let lastVoiceAt=0;
+
 function budgetTick(){
+  if(S.voice){
+    const lvl=live?live.level:micLevel;
+    if(lvl>.07)lastVoiceAt=Date.now();
+    if(lastVoiceAt&&Date.now()-lastVoiceAt>SILENCE_MS){
+      stopVoice(false);
+      render(C().idleStop); S.log.push({who:"her",text:C().idleStop});
+      setStatus(C().rec.off);
+      return;
+    }
+  }
   S.budget--;
   const m=Math.floor(S.budget/60), s=String(S.budget%60).padStart(2,"0");
   $("btime").textContent=m+":"+s;
@@ -978,8 +1029,11 @@ function buildRec(){
 let live=null, herBuf="", herTimer=null;
 
 // The real link. Falls back to the local demo brain when no backend is set.
+let reviving=false;
+
 async function connect(){
-  if(live) return true;
+  if(live&&live.running) return true;
+  if(live){ try{live.stop()}catch(_){} live=null; }   // dead socket, not a link
   if(!window.LiveSession||!window.CONFIG.FUNCTION_URL) return false;
   try{
     live=new window.LiveSession({
@@ -987,7 +1041,7 @@ async function connect(){
       language:S.lang, sessionId:sessionKey(), stream:micStream,
       on:{
         open:()=>{setState("listening");setStatus(C().status.listening)},
-        you:t=>{$("you").textContent=t},
+        you:t=>{ if(t&&t.trim()){ $("you").textContent=t; lastVoiceAt=Date.now(); } },
         her:t=>{                       // her text is the transcript of her own speech
           herBuf+=t; clearTimeout(herTimer);
           setState("responding"); setStatus(C().status.responding);
@@ -997,9 +1051,14 @@ async function connect(){
         tool:c=>addCard(c.name),
         interrupted:()=>{setState("interrupted");
           setTimeout(()=>{if(S.voice){setState("listening");setStatus(C().status.listening)}},600)},
-        turnComplete:()=>{if(S.voice){setState("listening");setStatus(C().status.listening);chips()}},
+        turnComplete:()=>{
+          if(S.voice){setState("listening");setStatus(C().status.listening)}
+          else{setState("idle");setStatus(C().status.ready)}
+          chips();                     // the visitor should never face a blank slate
+        },
         error:()=>{setState("error");setStatus(C().status.ready)},
-        close:()=>{if(S.voice)stopVoice(true)}
+        goAway:()=>revive(),          // the server warns before it closes
+        close:()=>revive()
       }
     });
     await live.start();
@@ -1013,6 +1072,25 @@ async function connect(){
     return false;                      // network or config problem -> demo brain
   }
 }
+// A closed socket is normal: tokens expire, networks blink. Reopen quietly and
+// keep the microphone where the visitor left it.
+async function revive(){
+  if(reviving||!started) return;
+  reviving=true;
+  const hadMic=S.voice;
+  try{ if(live){live.stop()} }catch(_){}
+  live=null;
+  const ok=await connect();
+  reviving=false;
+  if(ok!==true){
+    if(hadMic)stopVoice(true);
+    return;
+  }
+  if(hadMic&&micStream){ try{ await live.openMic(micStream) }catch(_){} }
+  setState(hadMic?"listening":"idle");
+  setStatus(hadMic?C().status.listening:C().status.ready);
+}
+
 function sessionKey(){
   let k=store.get("nas.session");
   if(!k){k=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2));store.set("nas.session",k)}
@@ -1025,9 +1103,13 @@ async function startVoice(){
     setTimeout(()=>{setState("idle");setStatus(C().status.ready)},2600);return}
   S.voice=true; $("mic").classList.add("live"); $("budget").classList.add("on");
 
+  track("voice_on",{});
   const linked=await connect();
   if(linked===true){
     live.openMic(micStream);           // start streaming into the existing link
+    $("you").classList.add("rec"); $("status").classList.add("rec");
+    $("you").textContent=C().rec.hint;
+    lastVoiceAt=Date.now();
   }else{
     rec=buildRec();                    // demo brain: browser transcription
     if(rec){try{rec.start()}catch(_){}} else say(C().noSTT,[]);
@@ -1042,7 +1124,8 @@ function stopVoice(exhausted){
   if(exhausted&&live){try{live.stop()}catch(_){}live=null}
   if(rec){rec.onend=null;try{rec.stop()}catch(_){}rec=null}
   $("mic").classList.remove("live");
-  if($("you").textContent.startsWith("…"))$("you").textContent="";
+  $("you").classList.remove("rec"); $("status").classList.remove("rec");
+  if($("you").textContent===C().rec.hint||$("you").textContent.startsWith("…"))$("you").textContent="";
   if(exhausted){$("budget").classList.remove("on");setState("ended");setStatus(C().status.ended);}
   else{setState("interrupted");setStatus(C().status.text);
     setTimeout(()=>{if(!S.voice){setState("idle");setStatus(C().status.ready)}},1400);}
@@ -1068,6 +1151,7 @@ function hideGate(){ $("gate").classList.add("out");
 
 function chooseLang(l){
   S.lang=l; store.set("nas.lang",l);
+  track("language",{lang:l,returning:started});
   document.documentElement.lang=C().code;
   $("lang").classList.add("out");
   setTimeout(function(){
@@ -1081,15 +1165,53 @@ document.querySelectorAll(".langs button").forEach(function(b){
   b.onclick=function(){ chooseLang(b.dataset.l) };
 });
 
-$("enter").onclick=function(){ hideGate(); begin(S.lang); };
+$("enter").onclick=function(){ track("entered",{}); hideGate(); begin(S.lang); };
 
 // The résumé button hands over the file, not a conversation about the file.
 $("dl").onclick=async function(){
+  track("click",{el:"gate_resume"});
   await loadPublished();
-  if(K.resume){ window.open(K.resume.url,"_blank","noopener"); return; }
+  if(K.resume){ track("resume",{from:"gate",lang:K.resume.language});
+    window.open(K.resume.url,"_blank","noopener"); return; }
   hideGate(); begin(S.lang);
   setTimeout(function(){ ask(C().chips[8]) },1500);
 };
+
+// ---------------------------------------------------------------------------
+//  Anonymous trail. No cookie, no identity, no IP — region is inferred from the
+//  browser's own timezone. Failures are swallowed: analytics must never be able
+//  to break a conversation.
+// ---------------------------------------------------------------------------
+let turns=0, entered=0, source="typed";
+function track(event, props){
+  try{
+    const U=window.CONFIG.SUPABASE_URL, A=window.CONFIG.ANON_KEY;
+    if(!U)return;
+    const body={
+      session_id:sessionKey(), event:event, props:props||{},
+      language:S.lang,
+      timezone:(Intl.DateTimeFormat().resolvedOptions().timeZone||""),
+      locale:(navigator.language||""),
+      device:(innerWidth<820?"mobile":"desktop"),
+      referrer:(document.referrer||"")
+    };
+    const blob=new Blob([JSON.stringify(body)],{type:"application/json"});
+    // sendBeacon survives the page closing, which is exactly when the most
+    // interesting event — how far they got before leaving — happens.
+    const url=U+"/rest/v1/analytics_events?apikey="+encodeURIComponent(A);
+    if(navigator.sendBeacon&&event==="left"){navigator.sendBeacon(url,blob);return}
+    fetch(U+"/rest/v1/analytics_events",{method:"POST",keepalive:true,
+      headers:{apikey:A,Authorization:"Bearer "+A,"content-type":"application/json",
+               Prefer:"return=minimal"},
+      body:JSON.stringify(body)}).catch(function(){});
+  }catch(_){}
+}
+
+addEventListener("pagehide",function(){
+  if(!started)return;
+  track("left",{turns:turns,seconds:Math.round((Date.now()-entered)/1000),
+                state:S.state,voice:S.voice});
+});
 
 // Published rows win over the seed values above. If the network is down or a
 // section is still empty, the seed keeps the experience whole.
@@ -1128,11 +1250,13 @@ async function loadPublished(){
 
 function begin(l){
   S.lang=l; store.set("nas.lang",l);
-  started=true;
+  started=true; entered=Date.now(); turns=0;
+  track("began",{});
   document.documentElement.lang=C().code;
   $("field").placeholder=C().ph;
   $("langbtn").textContent=C().tag;
   $("tbtn").textContent=C().bar.transcript;
+  $("visualbtn").textContent=C().bar.visual;
   $("mutebtn").textContent=S.muted?C().bar.muted:C().bar.sound;
   if(rec)rec.lang=C().code;
   loadPublished();
@@ -1157,13 +1281,18 @@ function begin(l){
 
 /* ---------- controls ---------- */
 $("composer").onsubmit=e=>{e.preventDefault();ask($("field").value)};
-$("mic").onclick=()=>S.voice?stopVoice(false):startVoice();
+$("mic").onclick=()=>{
+  track("click",{el:S.voice?"mic_stop":"mic_start"});
+  S.voice?stopVoice(false):startVoice();
+};
 $("mutebtn").onclick=e=>{
+  track("click",{el:S.muted?"sound_on":"sound_off"});
   S.muted=!S.muted; if(S.muted)speechSynthesis.cancel();
   e.target.textContent=S.muted?C().bar.muted:C().bar.sound;
   e.target.setAttribute("aria-pressed",S.muted);
 };
 $("langbtn").onclick=()=>{
+  track("click",{el:"change_language"});
   clearCards(); $("convo").classList.remove("on"); $("topbar").classList.remove("on");
   speechSynthesis.cancel(); if(S.voice)stopVoice(false);
   if(live){try{live.stop()}catch(_){}live=null}
@@ -1173,6 +1302,7 @@ $("langbtn").onclick=()=>{
 };
 $("tbtn").onclick=()=>{
   const on=$("transcript").classList.toggle("on");
+  if(on)track("click",{el:"transcript"});
   $("tbtn").setAttribute("aria-pressed",on);
   if(on){
     $("tinner").innerHTML=S.log.map(e=>
@@ -1180,6 +1310,7 @@ $("tbtn").onclick=()=>{
       || `<div class="t-you">—</div>`;
   }
 };
+$("visualbtn").onclick=()=>track("click",{el:"visual_portfolio"});
 $("tclose").onclick=()=>{$("transcript").classList.remove("on");$("tbtn").setAttribute("aria-pressed",false)};
 
 /* ---------- voice lab ---------- */
