@@ -75,6 +75,37 @@ header.page p{color:var(--dim);font-size:13px;max-width:62ch;margin-top:6px}
   border:1px dashed var(--line);border-radius:10px}
 
 /* ---- editor ---- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:22px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--panel)}
+.stat b{display:block;font-family:var(--display);font-weight:300;font-size:26px;margin-bottom:2px}
+.stat span{color:var(--faint);font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase}
+.panelbox{border:1px solid var(--line);border-radius:10px;background:var(--panel);
+  padding:16px 18px;margin-bottom:14px}
+.panelbox h4{font-family:var(--display);font-weight:300;font-size:16px;margin-bottom:4px}
+.panelbox .sub{color:var(--faint);font-size:12px;margin-bottom:14px;line-height:1.5}
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:13px}
+.bar .lbl{flex:1;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .track{width:38%;height:4px;background:rgba(239,233,222,.07);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--brass);opacity:.75}
+.bar .n{width:36px;text-align:right;font-family:var(--mono);font-size:11px;color:var(--faint)}
+.qlist{display:flex;flex-direction:column;gap:9px}
+.qlist div{font-size:13px;color:var(--dim);line-height:1.5;padding-left:13px;
+  border-left:1px solid rgba(194,162,120,.35)}
+.qlist small{display:block;color:var(--faint);font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.1em;margin-top:3px}
+.media{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-bottom:9px}
+.media figure{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  background:var(--void);aspect-ratio:4/3}
+.media img{width:100%;height:100%;object-fit:cover;display:block}
+.media figcaption{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:10px;
+  background:rgba(0,0,0,.72);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.media .kill{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;
+  background:rgba(0,0,0,.7);color:var(--warn);font-size:13px;line-height:1;display:grid;place-items:center}
+.media .kill:hover{background:rgba(212,120,92,.25)}
+.drop{border:1px dashed var(--line);border-radius:8px;padding:14px;text-align:center;
+  color:var(--faint);font-size:12.5px;cursor:pointer}
+.drop:hover{border-color:var(--brass);color:var(--dim)}
+.drop input{display:none}
 #editor{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;justify-content:flex-end;z-index:10}
 #editor.on{display:flex}
 .drawer{width:min(560px,100%);background:var(--panel);border-left:1px solid var(--line);
@@ -155,6 +186,8 @@ const N = (label) => ({ t:"num", label });
 const D = (label) => ({ t:"date", label });
 const STATUS = { t:"select", label:"Status", options:["draft","published","archived"],
   hint:"Nothing reaches the assistant until it is published." };
+const M = (label, hint) => ({ t:"media", label, hint });
+const K = (label, hint) => ({ t:"links", label, hint });
 
 // ---------------------------------------------------------------------------
 //  Every section is a table plus a field map. Adding a field here is the only
@@ -226,6 +259,28 @@ const SECTIONS = {
       positive_examples:L("Good examples"), forbidden_examples:L("Forbidden examples"),
       is_active:B("Active"), notes:A("Notes"), status:STATUS } },
 
+  cases: { label:"Cases", title:"name", sub:"summary", media:true,
+    desc:"The narrative work. Screens, diagrams and links live here — they are what turns a description of the work into evidence of it.",
+    fields:{ name:T("Name"), slug:T("Slug","Lowercase, no spaces. Used in URLs."),
+      summary:A("Positioning","What capability should this case prove?"),
+      problem:A("Core question / problem"), context:A("Context"),
+      audience:T("Audience"), nuno_role:A("Nuno's role"),
+      responsibilities:L("Responsibilities","One per line."),
+      constraints:A("Constraints"), process:A("Process and discovery"),
+      decisions:A("Key decisions"), alternatives:A("Alternatives considered"),
+      prototypes:A("Solution and prototypes"), validation:A("Validation"),
+      team:A("Collaboration and team"),
+      results:A("Outcome","Only confirmed results. If there are none yet, say so plainly."),
+      learnings:A("What it demonstrates and takeaway"),
+      skills:L("Skills","One per line."),
+      images:M("Screens and images","Upload the work. Captions are read by the assistant, so name what the screen shows."),
+      diagrams:M("Diagrams"), videos:K("Videos","One per line: Label | https://…"),
+      links:K("Links","One per line: Label | https://…"),
+      display_order:N("Order"),
+      is_confidential:B("Confidential — never shown or told"),
+      available_to_ai:B("Available to the assistant"),
+      status:STATUS } },
+
   suggestions: { label:"Suggestions", title:"text", sub:"language",
     desc:"The prompts offered under the sphere.",
     fields:{ text:T("Text"), language:T("Language","pt, en or ja"), category:T("Category"),
@@ -287,6 +342,11 @@ async function boot(){
 
 function buildNav(){
   const box = $("navlist"); box.innerHTML = "";
+  const ins = document.createElement("button");
+  ins.textContent = "Insights"; ins.dataset.k = "_insights";
+  ins.onclick = () => openInsights();
+  box.append(ins);
+  const sep0 = document.createElement("div"); sep0.className = "sep"; box.append(sep0);
   Object.entries(SECTIONS).forEach(([k,s],i) => {
     if(i === 7){ const d = document.createElement("div"); d.className = "sep"; box.append(d); }
     const b = document.createElement("button");
@@ -362,6 +422,16 @@ function edit(row){
       control.value = (row?.[k] ?? []).join("\n"); }
     else if(f.t === "bool"){ control = document.createElement("input"); control.type = "checkbox";
       control.checked = !!row?.[k]; }
+    else if(f.t === "media"){
+      control = document.createElement("div");
+      control.dataset.kind = "media";
+      control.dataset.value = JSON.stringify(row?.[k] ?? []);
+      renderMedia(control);
+    }
+    else if(f.t === "links"){
+      control = document.createElement("textarea");
+      control.value = (row?.[k] ?? []).map(x => (x.label ? x.label + " | " : "") + x.url).join("\n");
+    }
     else if(f.t === "select"){ control = document.createElement("select");
       f.options.forEach(o => { const op = document.createElement("option");
         op.value = o; op.textContent = o; control.append(op); });
@@ -374,6 +444,18 @@ function edit(row){
     if(f.t === "bool"){ wrap.append(control, lab); } else { wrap.append(lab, control); }
     if(f.hint){ const h = document.createElement("div"); h.className = "hint";
       h.textContent = f.hint; wrap.append(h); }
+    form.append(wrap);
+  }
+
+  if(s.media){
+    const wrap = document.createElement("div"); wrap.className = "field";
+    wrap.innerHTML = '<label>Add images</label>' +
+      '<label class="drop">Choose files — they upload when you save' +
+      '<input id="f_files" type="file" accept="image/*" multiple></label>';
+    const h2 = document.createElement("div"); h2.className = "hint";
+    h2.textContent = row ? "Files attach to this case." :
+      "Save the case first, then reopen it to attach images.";
+    wrap.append(h2);
     form.append(wrap);
   }
 
@@ -393,11 +475,163 @@ function edit(row){
 $("ecancel").onclick = () => $("editor").classList.remove("on");
 $("editor").onclick = e => { if(e.target === $("editor")) $("editor").classList.remove("on"); };
 
+// ---------------------------------------------------------------------------
+//  Insights. Read-only, aggregated in the browser from raw events.
+// ---------------------------------------------------------------------------
+async function openInsights(){
+  current = "_insights";
+  [...$("navlist").children].forEach(b => b.classList?.toggle("on", b.dataset?.k === "_insights"));
+  $("ptitle").textContent = "Insights";
+  $("pdesc").textContent = "Anonymous. No cookies, no IP, no identity — region comes from the visitor's own timezone.";
+  $("new").style.display = "none";
+  $("count").textContent = "";
+  $("list").innerHTML = '<div class="empty">Loading…</div>';
+
+  const since = new Date(Date.now() - 30 * 864e5).toISOString();
+  const { data, error } = await sb.from("analytics_events")
+    .select("session_id,event,props,language,timezone,device,created_at")
+    .gte("created_at", since).order("created_at", { ascending:false }).limit(5000);
+  if(error){ $("list").innerHTML = '<div class="empty">' + error.message + "</div>"; return; }
+  const rows = data ?? [];
+  if(!rows.length){
+    $("list").innerHTML = '<div class="empty">No visits recorded yet.<br>' +
+      'Numbers appear here once the updated site is published.</div>';
+    return;
+  }
+
+  const sessions = new Set(rows.map(r => r.session_id));
+  const evs = e => rows.filter(r => r.event === e);
+  const uniq = e => new Set(evs(e).map(r => r.session_id)).size;
+
+  const began = uniq("began"), asked = uniq("asked"), voice = uniq("voice_on");
+  const resume = evs("resume").length;
+  const lefts = evs("left");
+  const avgTurns = lefts.length
+    ? (lefts.reduce((n,r) => n + (r.props?.turns || 0), 0) / lefts.length) : 0;
+  const bounced = lefts.filter(r => (r.props?.turns || 0) === 0).length;
+
+  const tally = (arr, key) => {
+    const m = {};
+    arr.forEach(r => { const k = key(r); if(k) m[k] = (m[k] || 0) + 1; });
+    return Object.entries(m).sort((a,b) => b[1] - a[1]);
+  };
+  const region = t => (t || "").split("/")[0] || "—";
+
+  const bars = (title, sub, pairs, max) => {
+    if(!pairs.length) return "";
+    const top = pairs[0][1] || 1;
+    return '<div class="panelbox"><h4>' + title + '</h4><div class="sub">' + sub + "</div>" +
+      pairs.slice(0, max).map(([k,n]) =>
+        '<div class="bar"><span class="lbl">' + k + '</span>' +
+        '<span class="track"><span class="fill" style="width:' + (n/top*100) + '%"></span></span>' +
+        '<span class="n">' + n + "</span></div>").join("") + "</div>";
+  };
+
+  const questions = evs("asked").map(r => (r.props?.text || "").trim()).filter(Boolean);
+
+  $("list").innerHTML =
+    '<div class="stats">' +
+      stat(sessions.size, "visitors") +
+      stat(began, "started talking") +
+      stat(asked, "asked something") +
+      stat(voice, "used voice") +
+      stat(resume, "résumé downloads") +
+      stat(avgTurns.toFixed(1), "questions each") +
+    "</div>" +
+
+    '<div class="panelbox"><h4>Where they stop</h4><div class="sub">' +
+      'Of ' + sessions.size + ' visitors, ' + began + ' entered the conversation and ' +
+      asked + ' asked at least one question. ' + bounced +
+      ' left without asking anything — that is the number worth moving.' +
+      "</div></div>" +
+
+    bars("What they ask", "Every question, most frequent first. This is the most useful thing the site produces: it tells you what to publish next.",
+         tally(evs("asked"), r => (r.props?.text || "").trim().toLowerCase()), 15) +
+
+    bars("Language", "Chosen at the door.", tally(rows, r => r.language), 5) +
+    bars("Region", "From the browser timezone.", tally(rows, r => region(r.timezone)), 8) +
+    bars("Device", "", tally(rows, r => r.device), 3) +
+    bars("Buttons clicked", "Every control, most used first.",
+         tally(evs("click"), r => LABEL[r.props?.el] || r.props?.el), 12) +
+
+    bars("Contact links opened", "The closest thing this site has to a conversion.",
+         tally(evs("click").filter(r => r.props?.el === "contact_link"),
+               r => r.props?.label), 6) +
+
+    bars("Typed or tapped", "A visitor who types is a stronger signal than one who only taps what you offered.",
+         tally(evs("asked"), r => r.props?.source === "chip" ? "tapped a suggestion" : "typed their own"), 3) +
+
+    bars("Suggestions tapped", "Which prompts pull people in.",
+         tally(evs("click").filter(r => r.props?.el === "suggestion"), r => r.props?.text), 10) +
+
+    bars("Cards shown", "Which tools the assistant decided to surface.",
+         tally(evs("card"), r => r.props?.tool), 10) +
+
+    (questions.length ? '<div class="panelbox"><h4>Most recent questions</h4>' +
+      '<div class="sub">Verbatim, truncated to 200 characters.</div><div class="qlist">' +
+      evs("asked").slice(0, 12).map(r =>
+        "<div>" + (r.props?.text || "") + "<small>" + (r.language || "") + " · " +
+        new Date(r.created_at).toLocaleString() + "</small></div>").join("") +
+      "</div></div>" : "");
+}
+const LABEL = {
+  suggestion:"suggestion chip", contact_link:"contact link", card_close:"closed a card",
+  mic_start:"microphone on", mic_stop:"microphone off", sound_on:"sound on",
+  sound_off:"sound off", change_language:"change language", transcript:"transcript",
+  gate_resume:"résumé, from the entrance"
+};
+function stat(v, label){
+  return '<div class="stat"><b>' + v + "</b><span>" + label + "</span></div>";
+}
+
+// Images are stored as [{path, url, caption}]. The caption travels to the
+// assistant, so it is worth writing something descriptive.
+function renderMedia(box){
+  const list = JSON.parse(box.dataset.value || "[]");
+  box.innerHTML = "";
+  if(!list.length){
+    const p = document.createElement("div"); p.className = "hint";
+    p.textContent = "No images yet.";
+    box.append(p); return;
+  }
+  const grid = document.createElement("div"); grid.className = "media";
+  list.forEach((m, idx) => {
+    const fig = document.createElement("figure");
+    const img = document.createElement("img"); img.src = m.url; img.alt = m.caption || "";
+    const cap = document.createElement("figcaption"); cap.textContent = m.caption || "";
+    cap.title = "Click to rename";
+    cap.onclick = () => {
+      const v = prompt("Caption — describe what this screen shows:", m.caption || "");
+      if(v === null) return;
+      list[idx].caption = v;
+      box.dataset.value = JSON.stringify(list);
+      renderMedia(box);
+    };
+    const kill = document.createElement("button");
+    kill.className = "kill"; kill.textContent = "×"; kill.title = "Remove";
+    kill.onclick = async () => {
+      if(!confirm("Remove this image?")) return;
+      if(m.path) await sb.storage.from("case-media").remove([m.path]);
+      list.splice(idx, 1);
+      box.dataset.value = JSON.stringify(list);
+      renderMedia(box);
+    };
+    fig.append(img, cap, kill);
+    grid.append(fig);
+  });
+  box.append(grid);
+}
+
 function collect(){
   const s = SECTIONS[current], out = {};
   for(const [k,f] of Object.entries(s.fields)){
     const el = $("f_" + k);
-    if(f.t === "bool") out[k] = el.checked;
+    if(f.t === "media") out[k] = JSON.parse(el.dataset.value || "[]");
+    else if(f.t === "links") out[k] = el.value.split("\n").map(v => v.trim()).filter(Boolean)
+      .map(line => { const i = line.lastIndexOf("|");
+        return i > -1 ? { label: line.slice(0, i).trim(), url: line.slice(i + 1).trim() }
+                      : { label: "", url: line }; });
+    else if(f.t === "bool") out[k] = el.checked;
     else if(f.t === "list") out[k] = el.value.split("\n").map(v => v.trim()).filter(Boolean);
     else if(f.t === "num") out[k] = Number(el.value || 0);
     else out[k] = el.value.trim() === "" ? null : el.value.trim();
@@ -423,6 +657,23 @@ async function save(publishToggle){
   else { const r = await sb.from(current).insert(payload).select("id").single();
     err = r.error; id = r.data?.id; }
   if(err){ $("emsg").textContent = err.message; return; }
+
+  const files = $("f_files")?.files;
+  if(files && files.length && id){
+    const bucket = sb.storage.from("case-media");
+    const gathered = [];
+    for(const f of files){
+      const path = id + "/" + Date.now() + "_" + f.name.replace(/[^\w.\-]/g, "_");
+      const up = await bucket.upload(path, f, { upsert:true });
+      if(up.error){ $("emsg").textContent = "Upload failed: " + up.error.message; continue; }
+      gathered.push({ path, url: bucket.getPublicUrl(path).data.publicUrl,
+                      caption: f.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ") });
+    }
+    if(gathered.length){
+      const merged = (payload.images || []).concat(gathered);
+      await sb.from(current).update({ images: merged }).eq("id", id);
+    }
+  }
 
   const file = $("f_file")?.files?.[0];
   if(file && id){
