@@ -35,9 +35,9 @@
   --brass:     #C8A24A;
   --accent:    #6FA8FF;
 
-  --display: 'Archivo', system-ui, sans-serif;
-  --body:    'Instrument Sans', system-ui, sans-serif;
-  --mono:    'DM Mono', ui-monospace, monospace;
+  --display: 'Archivo', 'Zen Kaku Gothic New', system-ui, sans-serif;
+  --body:    'Instrument Sans', 'Zen Kaku Gothic New', system-ui, sans-serif;
+  --mono:    'DM Mono', 'Zen Kaku Gothic New', ui-monospace, monospace;
   --jp:      'Zen Kaku Gothic New', var(--body);
 
   --pad: clamp(18px, 4.2vw, 64px);
@@ -130,10 +130,17 @@ a{ color:inherit; text-decoration:none; }
 
 .lang{ display:flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; }
 .lang button{
-  font-family:var(--mono); font-size:10px; letter-spacing:.14em; padding:7px 11px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.14em; padding:7px 10px;
   color:var(--dim); transition:color .3s, background .3s;
 }
 .lang button[aria-pressed="true"]{ color:var(--void); background:var(--bone); }
+.lang button[data-lang="ja"]{ font-family:var(--jp); letter-spacing:.02em; font-size:10.5px; }
+@media (max-width:520px){
+  .hdr{ padding-left:calc(var(--frame) + 12px); padding-right:calc(var(--frame) + 12px); }
+  .hdr__name{ font-size:12px; }
+  .hdr__tools{ gap:6px; }
+  .lang button{ padding:7px 8px; font-size:9.5px; }
+}
 
 .creature{
   display:inline-flex; align-items:center; gap:10px;
@@ -197,11 +204,13 @@ a{ color:inherit; text-decoration:none; }
 }
 .hero__content{
   position:absolute; inset:0; z-index:3;
-  display:grid; align-content:center; padding:0 var(--pad);
-  grid-template-columns:1fr; gap:0;
+  display:flex; flex-direction:column; justify-content:center;
+  /* reserva o header em cima e o rodapé do hero embaixo */
+  padding:calc(var(--frame) + 76px) var(--pad) calc(var(--frame) + 104px);
 }
 .hero__eyebrow{
-  display:flex; gap:14px; align-items:center; color:var(--brass); margin-bottom:clamp(18px,3vh,34px);
+  display:flex; gap:14px; align-items:center; color:var(--brass);
+  margin-bottom:clamp(14px,2.6vh,32px); flex:0 0 auto;
   opacity:0; transform:translateY(14px);
 }
 .hero__eyebrow::before{ content:''; width:clamp(28px,5vw,64px); height:1px; background:var(--brass); opacity:.6; }
@@ -210,14 +219,27 @@ a{ color:inherit; text-decoration:none; }
 .hero__line span{
   display:block;
   font-variation-settings:'wdth' 120,'wght' 640;
-  font-size:min(clamp(38px, 9.2vw, 140px), 15.5vh); line-height:.92; letter-spacing:-.045em;
+  font-size:min(clamp(34px, 8.8vw, 138px), 13.4vh); line-height:.93; letter-spacing:-.045em;
   transform:translateY(105%);
 }
 .hero__line:nth-child(2) span{ font-variation-settings:'wdth' 76,'wght' 300; font-style:normal; color:var(--mist); }
 .hero__line:nth-child(4) span{ font-variation-settings:'wdth' 124,'wght' 700; }
 .hero__sub{
-  margin:clamp(22px,4vh,44px) 0 0; max-width:46ch; color:var(--mist);
-  font-size:clamp(14px,1.5vw,17px); opacity:0; transform:translateY(14px);
+  margin:clamp(16px,3.2vh,40px) 0 0; max-width:56ch; color:var(--mist);
+  font-size:clamp(13.5px,1.45vw,17px); line-height:1.55;
+  opacity:0; transform:translateY(14px); flex:0 0 auto;
+}
+/* notebooks com pouca altura: aperta tudo em vez de deixar sobrepor */
+@media (max-height:860px) and (min-width:761px){
+  .hero__line span{ font-size:min(clamp(32px,7.6vw,110px), 12.2vh); }
+  .hero__sub{ font-size:14px; max-width:62ch; margin-top:clamp(12px,2.4vh,26px); }
+  .hero__eyebrow{ margin-bottom:clamp(10px,2vh,20px); }
+  .hero__meta{ bottom:clamp(34px,5.5vh,60px); }
+  .hero__content{ padding-top:calc(var(--frame) + 66px); padding-bottom:calc(var(--frame) + 86px); }
+}
+@media (max-height:700px) and (min-width:761px){
+  .hero__line span{ font-size:min(clamp(28px,6.6vw,88px), 11.4vh); }
+  .hero__sub{ display:none; }
 }
 .hero__meta{
   position:absolute; left:var(--pad); right:var(--pad); bottom:clamp(56px,9vh,96px);
@@ -232,7 +254,15 @@ a{ color:inherit; text-decoration:none; }
 .is-ready .hero__line:nth-child(3) span{ transition-delay:.16s }
 .is-ready .hero__line:nth-child(4) span{ transition-delay:.24s }
 .is-ready .hero__eyebrow,.is-ready .hero__sub,.is-ready .hero__meta{ opacity:1; transform:none; transition:opacity .9s var(--ease) .5s, transform .9s var(--ease) .5s; }
-@media (max-width:760px){ .hero{ height:180vh } .hero__meta{ display:none } }
+@media (max-width:760px){
+  .hero{ height:180vh; }
+  .hero__meta{ display:none; }
+  .hero__line span{ font-size:clamp(32px, 12.2vw, 62px); line-height:.98; letter-spacing:-.035em; }
+  .hero__eyebrow{ font-size:9.5px; letter-spacing:.11em; }
+  .hero__eyebrow::before{ width:20px; }
+  .hero__content{ padding-top:calc(var(--frame) + 70px); padding-bottom:clamp(60px,12vh,110px); }
+  .hero__sub{ font-size:14.5px; max-width:38ch; }
+}
 
 /* =========================================================================
    SEÇÕES GENÉRICAS
@@ -403,6 +433,42 @@ a{ color:inherit; text-decoration:none; }
 @media (max-width:760px){ .ov__block{ grid-template-columns:1fr; gap:10px; } .ov__k{ position:static; } }
 
 /* =========================================================================
+   日本語 — kerning e entrelinha próprios
+   O tracking negativo do display é feito para latino; em CJK aperta demais.
+   ========================================================================= */
+body.lang-ja .hero__line span,
+body.lang-ja .thesis__line b,
+body.lang-ja .case__name,
+body.lang-ja .ov__title,
+body.lang-ja .end__big,
+body.lang-ja .next__name,
+body.lang-ja .prin__title,
+body.lang-ja .ov__take p{ letter-spacing:.005em; }
+body.lang-ja .hero__line span{ line-height:1.08; font-size:min(clamp(28px,7.0vw,104px), 11.6vh); }
+@media (max-height:860px) and (min-width:761px){
+  body.lang-ja .hero__line span{ font-size:min(clamp(26px,6.2vw,88px), 10.6vh); }
+}
+@media (max-width:760px){
+  body.lang-ja .hero__line span{ font-size:clamp(30px, 13.4vw, 66px); line-height:1.14; letter-spacing:.005em; }
+  body.lang-ja .hero__eyebrow{ letter-spacing:.04em; }
+}
+body.lang-ja .thesis__line b,
+body.lang-ja .end__big{ line-height:1.18; }
+body.lang-ja .case__name,
+body.lang-ja .ov__title{ line-height:1.1; }
+body.lang-ja .u-mono,
+body.lang-ja .case__family,
+body.lang-ja .case__tags li,
+body.lang-ja .ov__tags li{ letter-spacing:.06em; }
+body.lang-ja .ov__q{ letter-spacing:0; line-height:1.5; }
+body.lang-ja .thesis__body,
+body.lang-ja .ov__p,
+body.lang-ja .ov__list li,
+body.lang-ja .prin__body,
+body.lang-ja .hero__sub{ line-height:1.85; }
+body.lang-ja .case__q{ line-height:1.7; }
+
+/* =========================================================================
    REDUCED MOTION
    ========================================================================= */
 @media (prefers-reduced-motion: reduce){
@@ -449,10 +515,11 @@ a{ color:inherit; text-decoration:none; }
     <div class="lang" role="group" aria-label="Idioma / Language">
       <button type="button" data-lang="pt" aria-pressed="true">PT</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="ja" aria-pressed="false" lang="ja">日本語</button>
     </div>
-    <a class="creature" id="creatureBtn" href="/" aria-label="Falar com a criatura">
+    <a class="creature" id="creatureBtn" href="/" aria-label="Conversar com a IA">
       <span class="creature__dot" aria-hidden="true"></span>
-      <span class="creature__label" data-i="creature">Falar com a criatura</span>
+      <span class="creature__label" data-i="creature">Conversar com a IA</span>
     </a>
   </div>
 </header>
@@ -571,9 +638,11 @@ const CONFIG = {
 };
 
 const D = window.NUNO_DATA;
+const LANGS = ['pt','en','ja'];
 let LANG = localStorage.getItem('nuno.lang');
-if (LANG !== 'pt' && LANG !== 'en') {
-  LANG = (navigator.language || 'pt').slice(0,2).toLowerCase() === 'pt' ? 'pt' : 'en';
+if (!LANGS.includes(LANG)) {
+  const nav = (navigator.language || 'pt').slice(0,2).toLowerCase();
+  LANG = LANGS.includes(nav) ? nav : 'en';
 }
 
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -581,6 +650,7 @@ const IS_MOBILE = matchMedia('(max-width: 900px)').matches;
 const $  = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const t  = v => (v && typeof v === 'object' && !Array.isArray(v)) ? (v[LANG] ?? v.en ?? v.pt) : v;
+const HTML_LANG = { pt:'pt-BR', en:'en', ja:'ja' };
 const isPlaceholder = v => typeof v === 'string' && v.startsWith('__');
 const clean = v => isPlaceholder(v) ? v.slice(2) : v;
 const clamp = (v,a=0,b=1) => Math.min(b, Math.max(a, v));
@@ -590,34 +660,45 @@ const lerp = (a,b,n) => a + (b-a)*n;
    STRINGS DE INTERFACE
    ========================================================================= */
 const UI = {
-  role:        { pt:'Product Designer Sênior', en:'Senior Product Designer' },
-  creature:    { pt:'Falar com a criatura', en:'Talk to the creature' },
-  scroll:      { pt:'Role para explorar', en:'Scroll to explore' },
-  heroEyebrow: { pt:'Product Designer Sênior · 16 anos · Curitiba, Brasil', en:'Senior Product Designer · 16 years · Curitiba, Brazil' },
+  role:        { pt:'Product Designer Sênior', en:'Senior Product Designer', ja:'シニアプロダクトデザイナー' },
+  creature:    { pt:'Conversar com a IA', en:'Talk to the AI', ja:'AIと話す' },
+  scroll:      { pt:'Role para explorar', en:'Scroll to explore', ja:'スクロールして見る' },
+  heroEyebrow: { pt:'Product Designer Sênior · 16 anos · Curitiba, Brasil', en:'Senior Product Designer · 16 years · Curitiba, Brazil', ja:'シニアプロダクトデザイナー · 16年 · ブラジル・クリチバ' },
+  heroEyebrowSm:{ pt:'Product Designer Sênior · 16 anos', en:'Senior Product Designer · 16 years', ja:'シニアプロダクトデザイナー · 16年' },
   heroSub:     { pt:'Entender o problema real, aprender o domínio e reduzir a complexidade até que a interação com ela pareça clara, previsível e administrável.',
-                 en:'Understand the real problem, learn the domain and reduce complexity until interacting with it feels clear, predictable and manageable.' },
-  heroMetaRight:{ pt:'Três cases · Sistemas complexos · Produtos de IA', en:'Three cases · Complex systems · AI products' },
-  secThesis:   { pt:'Como eu penso', en:'How I think' },
-  secWork:     { pt:'Trabalhos selecionados', en:'Selected work' },
-  secPrin:     { pt:'Como eu trabalho', en:'How I work' },
-  secNext:     { pt:'Em construção', en:'In progress' },
-  thesisBody:  { pt:D.profile.thesis.pt, en:D.profile.thesis.en },
-  openCase:    { pt:'Abrir case', en:'Open case' },
-  askAI:       { pt:'Perguntar à criatura', en:'Ask the creature' },
-  close:       { pt:'Fechar', en:'Close' },
-  question:    { pt:'A pergunta', en:'The question' },
-  takeaway:    { pt:'O que fica', en:'Takeaway' },
-  evidence:    { pt:'Evidências', en:'Evidence' },
-  pending:     { pt:'Link pendente', en:'Link pending' },
-  imgPending:  { pt:'Imagem pendente — mockup esquemático', en:'Image pending — schematic mockup' },
-  wip:         { pt:'Em desenvolvimento', en:'In development' },
-  live:        { pt:'Em produção', en:'In production' },
-  thisSite:    { pt:'Você está nele', en:'You are in it' },
-  endBig:      { pt:'Vamos conversar sobre\nproblemas difíceis.', en:'Let\u2019s talk about\nhard problems.' },
-  builtWith:   { pt:'Versão visual · a versão com IA está a um clique', en:'Visual version · the AI version is one click away' },
-  email:       { pt:'E-mail', en:'Email' },
-  resume:      { pt:'Currículo (PDF)', en:'Résumé (PDF)' },
-  scrollHint:  { pt:'Role', en:'Scroll' }
+                 en:'Understand the real problem, learn the domain and reduce complexity until interacting with it feels clear, predictable and manageable.',
+                 ja:'本当の問題を理解し、領域を学び、複雑さとの関わりが明確で予測可能、扱いやすくなるまで減らしていく。' },
+  heroMetaRight:{ pt:'Três cases · Sistemas complexos · Produtos de IA', en:'Three cases · Complex systems · AI products', ja:'3つの事例 · 複雑なシステム · AIプロダクト' },
+  secThesis:   { pt:'Como eu penso', en:'How I think', ja:'考え方' },
+  secWork:     { pt:'Trabalhos selecionados', en:'Selected work', ja:'主な仕事' },
+  secPrin:     { pt:'Como eu trabalho', en:'How I work', ja:'進め方' },
+  secNext:     { pt:'Em construção', en:'In progress', ja:'制作中' },
+  thesisBody:  D.profile.thesis,
+  openCase:    { pt:'Abrir case', en:'Open case', ja:'事例を見る' },
+  askAI:       { pt:'Perguntar à IA', en:'Ask the AI', ja:'AIに聞く' },
+  close:       { pt:'Fechar', en:'Close', ja:'閉じる' },
+  question:    { pt:'A pergunta', en:'The question', ja:'問い' },
+  takeaway:    { pt:'O que fica', en:'Takeaway', ja:'学び' },
+  evidence:    { pt:'Evidências', en:'Evidence', ja:'資料' },
+  pending:     { pt:'Link pendente', en:'Link pending', ja:'リンク準備中' },
+  imgPending:  { pt:'Imagem pendente — mockup esquemático', en:'Image pending — schematic mockup', ja:'画像準備中 — 概略モックアップ' },
+  wip:         { pt:'Em desenvolvimento', en:'In development', ja:'開発中' },
+  live:        { pt:'Em produção', en:'In production', ja:'稼働中' },
+  thisSite:    { pt:'Você está nele', en:'You are in it', ja:'いま見ているもの' },
+  endBig:      { pt:'Vamos conversar sobre\nproblemas difíceis.', en:'Let\u2019s talk about\nhard problems.', ja:'難しい問題について\n話しましょう。' },
+  builtWith:   { pt:'Versão visual · a versão com IA está a um clique', en:'Visual version · the AI version is one click away', ja:'ビジュアル版 · AI版はワンクリックで' },
+  email:       { pt:'E-mail', en:'Email', ja:'メール' },
+  resume:      { pt:'Currículo (PDF)', en:'Résumé (PDF)', ja:'履歴書（PDF）' },
+  scrollHint:  { pt:'Role', en:'Scroll', ja:'スクロール' },
+  secLabels:   { hero:      { pt:'Início',        en:'Start',       ja:'はじめに' },
+                 thesis:    { pt:'Tese',          en:'Thesis',      ja:'考え方' },
+                 workHead:  { pt:'Trabalhos',     en:'Work',        ja:'仕事' },
+                 principles:{ pt:'Princípios',    en:'Principles',  ja:'進め方' },
+                 upcoming:  { pt:'Em construção', en:'In progress', ja:'制作中' },
+                 contact:   { pt:'Contato',       en:'Contact',     ja:'連絡先' } },
+  thesisLines: { pt:['Entender o problema.','Aprender o domínio.','Reduzir a complexidade.'],
+                 en:['Understand the problem.','Learn the domain.','Reduce the complexity.'],
+                 ja:['問題を理解する。','領域を学ぶ。','複雑さを減らす。'] }
 };
 
 /* =========================================================================
@@ -699,18 +780,24 @@ function loadImage(src, caseObj){
    ========================================================================= */
 function renderStatic(){
   $$('[data-i]').forEach(el => { const k = el.dataset.i; if (UI[k]) el.textContent = t(UI[k]); });
+  // linha de crédito do hero encurta no mobile para não quebrar em duas
+  const eb = $('.hero__eyebrow span');
+  if (eb) eb.textContent = t(innerWidth <= 760 ? UI.heroEyebrowSm : UI.heroEyebrow);
   const cb = $('#creatureBtn'); cb.href = CONFIG.aiUrl; cb.setAttribute('aria-label', t(UI.creature));
   $('#year').textContent = new Date().getFullYear();
-  document.documentElement.lang = LANG === 'pt' ? 'pt-BR' : 'en';
+  document.documentElement.lang = HTML_LANG[LANG] || 'en';
+  Object.entries(UI.secLabels).forEach(([id, label]) => {
+    const el = document.getElementById(id);
+    if (el) el.dataset.section = t(label);
+  });
+  document.body.classList.toggle('lang-ja', LANG === 'ja');
 
   // hero
   $('#heroTitle').innerHTML = t(D.profile.headline)
     .map(l => `<span class="hero__line"><span>${l}</span></span>`).join('');
 
   // tese
-  const words = LANG === 'pt'
-    ? ['Entender o problema.','Aprender o domínio.','Reduzir a complexidade.']
-    : ['Understand the problem.','Learn the domain.','Reduce the complexity.'];
+  const words = t(UI.thesisLines);
   $('#thesisTitle').innerHTML = words
     .map((w,i) => `<span class="thesis__line" style="--i:${i}"><b>${w}</b></span>`).join('');
 
@@ -763,7 +850,7 @@ function linkBtn(url, label){
 
 function renderCases(){
   $('#cases').innerHTML = D.cases.map(c => `
-    <section class="case" id="case-${c.id}" data-case="${c.id}" data-section="${typeof c.name==='string'?c.name:t(c.name)}">
+    <section class="case" id="case-${c.id}" data-case="${c.id}" data-section="${t(c.name)}">
       <div class="case__inner">
         <div class="case__text">
           <div class="case__idx u-mono">${c.index}<i></i><span>${c.status === 'wip' ? t(UI.wip) : t(UI.live)}</span></div>
