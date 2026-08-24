@@ -1207,6 +1207,7 @@ function hideGate(){ $("gate").classList.add("out");
   setTimeout(function(){$("gate").hidden=true;$("gate").classList.remove("out")},420); }
 
 function chooseLang(l){
+  if(started||live)wipeConversation();
   S.lang=l; store.set("nas.lang",l);
   track("language",{lang:l,returning:started});
   document.documentElement.lang=C().code;
@@ -1350,11 +1351,32 @@ $("mutebtn").onclick=e=>{
   e.target.textContent=S.muted?C().bar.muted:C().bar.sound;
   e.target.setAttribute("aria-pressed",S.muted);
 };
+// Switching language starts a new conversation. Without this, the previous one
+// kept speaking, kept its suggestions and kept its history on screen, so for a
+// few seconds the visitor faced two languages at once.
+function wipeConversation(){
+  if(live){try{live.stop()}catch(_){}live=null}
+  if(rec){rec.onend=null;try{rec.stop()}catch(_){}rec=null}
+  if(S.voice){micOff();clearInterval(S.timer);S.voice=false;
+    $("mic").classList.remove("live");$("budget").classList.remove("on");}
+  try{speechSynthesis.cancel()}catch(_){}
+  clearTimeout(revealTimer);
+  herBuf=""; turns=0; S.log=[];
+  $("said").querySelector("p").innerHTML="";
+  $("you").textContent=""; $("you").classList.remove("rec");
+  $("status").classList.remove("rec");
+  $("chips").innerHTML="";
+  $("field").value="";
+  clearCards();
+  const sv=$("shotview"); if(sv)sv.remove();
+  $("transcript").classList.remove("on");
+  $("tbtn").setAttribute("aria-pressed",false);
+}
+
 $("langbtn").onclick=()=>{
   track("click",{el:"change_language"});
-  clearCards(); $("convo").classList.remove("on"); $("topbar").classList.remove("on");
-  speechSynthesis.cancel(); if(S.voice)stopVoice(false);
-  if(live){try{live.stop()}catch(_){}live=null}
+  wipeConversation();
+  $("convo").classList.remove("on"); $("topbar").classList.remove("on");
   setState("idle"); started=false;
   skipGate=true;                      // already past the entrance; go straight back in
   $("lang").classList.add("on");
