@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nuno Akira Sugano</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='47' fill='%2308090B' stroke='%23C2A278' stroke-width='4'/><text x='50' y='52' text-anchor='middle' dominant-baseline='central' font-family='Arial,sans-serif' font-size='38' font-weight='700' fill='%23C2A278' letter-spacing='1'>NA</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;1,6..72,300&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+JP:wght@300&family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
@@ -214,7 +215,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #shotview .close:hover{color:var(--bone)}
 .card .empty{margin-top:11px;font-size:12px;line-height:1.6;color:var(--bone-faint);
   border-left:1px solid rgba(194,162,120,.35);padding-left:11px}
-.card .x{position:absolute;top:13px;right:13px;color:var(--bone-faint);line-height:1;font-size:15px}
+.card .x{position:absolute;top:6px;right:6px;padding:9px 12px;color:var(--bone-faint);line-height:1;font-size:20px;cursor:pointer}
 .card .x:hover{color:var(--bone)}
 
 /* ---------- transcript ---------- */
@@ -275,7 +276,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   #topbar{padding:16px 18px}
   #center{padding:0 18px}
   #cards{position:fixed;top:auto;bottom:0;left:0;right:0;width:100%;
-    max-height:52vh;padding:14px 14px 18px;border-radius:18px 18px 0 0;
+    max-height:52vh;padding:14px 14px 18px;border-radius:18px 18px 0 0;overflow-y:auto;-webkit-overflow-scrolling:touch;
     background:linear-gradient(to top,#000 55%,transparent);gap:10px}
   .card{animation-name:cardup}
   @keyframes cardup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
@@ -455,6 +456,8 @@ pt:{code:"pt-BR",tag:"PT",
   cards:{caseLabel:"Case",close:"Fechar",profile:"Perfil",experience:"Experiência",skills:"Competências",education:"Formação",
     languages:"Idiomas",availability:"Disponibilidade",contact:"Contato",resume:"Currículo",
     practice:"Áreas de atuação",native:"Nativo",fluent:"Fluente",basic:"Básico",
+    expTitle:"{y} anos em design",
+    practiceList:["Discovery","Enquadramento do problema","Jornadas","Arquitetura de informação","Fluxos","Wireframes","UX/UI","Prototipação","Validação","Design systems","Componentes","Tokens","Documentação","Governança","Alinhamento com stakeholders","Colaboração com devs","Revisão de implementação","IA aplicada","Interfaces conversacionais","Prototipação funcional em código"],
     fluentNote:"Colaboração profissional diária",basicNote:"Lê e escreve hiragana e katakana",
     remote:"Remoto internacional",jp:"Times distribuídos",move:"Presencial ou híbrido",
     visa:"Aberto a relocation",download:"Baixar PDF",
@@ -498,6 +501,7 @@ en:{code:"en-US",tag:"EN",
   cards:{caseLabel:"Case",close:"Close",profile:"Profile",experience:"Experience",skills:"Skills",education:"Education",
     languages:"Languages",availability:"Availability",contact:"Contact",resume:"Résumé",
     practice:"Practice areas",native:"Native",fluent:"Fluent",basic:"Basic",
+    expTitle:"{y} years in design",
     fluentNote:"Daily professional collaboration",basicNote:"Reads and writes hiragana and katakana",
     remote:"International remote",jp:"Distributed teams",move:"On-site or hybrid",
     visa:"Open to relocation",download:"Download PDF",
@@ -541,6 +545,8 @@ ja:{code:"ja-JP",tag:"JA",
   cards:{caseLabel:"事例",close:"閉じる",profile:"プロフィール",experience:"経験",skills:"専門領域",education:"学歴",
     languages:"言語",availability:"稼働条件",contact:"連絡先",resume:"履歴書",
     practice:"担当領域",native:"母語",fluent:"流暢",basic:"基礎",
+    expTitle:"デザイン歴{y}年",
+    practiceList:["ディスカバリー","課題の定義","ジャーニー","情報アーキテクチャ","フロー","ワイヤーフレーム","UX/UI","プロトタイピング","検証","デザインシステム","コンポーネント","トークン","ドキュメント","ガバナンス","ステークホルダー調整","開発者との協働","実装レビュー","応用AI","会話型インターフェース","コードによる機能プロトタイピング"],
     fluentNote:"日常の業務で使用",basicNote:"ひらがな・カタカナの読み書き",
     remote:"海外リモート",jp:"分散チーム",move:"オンサイト・ハイブリッド",
     visa:"移転も検討可",download:"PDFをダウンロード",
@@ -580,9 +586,9 @@ const CARD={
   show_profile_summary:c=>`<div class="kicker mono">${c.profile}</div><h3>${K.name}</h3>
     <p>${K.role} · ${K.location}</p><div class="kicker mono" style="margin:14px 0 0">${c.practice}</div>
     <ul>${K.practice.slice(0,10).map(p=>`<li>${p}</li>`).join("")}</ul>`,
-  show_experience:c=>`<div class="kicker mono">${c.experience}</div><h3>${K.years} years in design</h3>
+  show_experience:c=>`<div class="kicker mono">${c.experience}</div><h3>${(c.expTitle||"{y} years in design").replace("{y}",K.years)}</h3>
     <div class="kicker mono" style="margin:14px 0 0">${c.practice}</div>
-    <ul>${K.practice.map(p=>`<li>${p}</li>`).join("")}</ul>
+    <ul>${(c.practiceList||K.practice).map(p=>`<li>${p}</li>`).join("")}</ul>
     <div class="empty">${c.pending}</div>`,
   show_skills:c=>`<div class="kicker mono">${c.skills}</div><h3>${K.skills.length} areas</h3>
     <ul>${K.skills.map(s=>`<li>${s}</li>`).join("")}</ul>`,
@@ -997,6 +1003,8 @@ function addCard(tool,args){
   el.querySelector(".x").addEventListener("click",function(){
     track("click",{el:"card_close",tool:tool});
   });
+  el.dataset.tool=tool;
+  [...$("cards").children].forEach(function(c){if(c.dataset.tool===tool)c.remove()});
   $("cards").prepend(el);
   while($("cards").children.length>3)$("cards").lastElementChild.remove();
 }
@@ -1089,6 +1097,7 @@ let live=null, herBuf="", herTimer=null, outCtx=null, spoke=false, watchdog=null
 // unlocked here — synchronously — the first time the visitor taps anything.
 function unlockAudio(){
   try{
+    if(navigator.audioSession) navigator.audioSession.type="playback"; // iOS 16.4+: botao de mudo nao silencia a voz
     if(!outCtx) outCtx=new (window.AudioContext||window.webkitAudioContext)({sampleRate:24000});
     if(outCtx.state==="suspended") outCtx.resume();
     // iOS needs a sound to actually play before it considers the context live.
@@ -1098,7 +1107,7 @@ function unlockAudio(){
   return outCtx;
 }
 // Any tap anywhere is a chance to recover a context the browser suspended.
-addEventListener("pointerdown",function(){ if(outCtx&&outCtx.state==="suspended")outCtx.resume(); },
+addEventListener("pointerdown",function(){ if(navigator.audioSession)try{navigator.audioSession.type="playback"}catch(_){} if(outCtx&&outCtx.state==="suspended")outCtx.resume(); },
   {capture:true});
 
 // The real link. Falls back to the local demo brain when no backend is set.
