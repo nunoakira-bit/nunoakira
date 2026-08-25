@@ -196,7 +196,12 @@ export class LiveSession {
   }
 
   send(text) {
-    this.session?.sendRealtimeInput({ text });
+    // A discrete text turn: the opening "__open__" or a typed/clicked question.
+    // sendClientContent is queued until the session's setup completes and closes
+    // the turn, so the model always answers. sendRealtimeInput was fire-and-forget
+    // realtime: the very first packet (the opening) landed before setup and was
+    // dropped, leaving the presentation silent while later questions worked.
+    this.session?.sendClientContent({ turns: [{ role: "user", parts: [{ text }] }], turnComplete: true });
   }
 
   stop() {
