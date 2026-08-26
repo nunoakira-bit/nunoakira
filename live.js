@@ -80,6 +80,11 @@ export class LiveSession {
     const node = this.inCtx.createScriptProcessor(4096, 1, 1);
     node.onaudioprocess = e => {
       if (!this.running || !this.session) return;
+      // Half-duplex: while she is speaking, don't stream the mic. On a phone
+      // speaker the mic hears her own voice, the server's VAD reads it as the
+      // visitor talking and interrupts her mid-sentence. Muting the send while
+      // she has audio queued stops the self-interruption (the cut-outs).
+      if (this.sources.size > 0) { this.level = 0; return; }
       const f32 = e.inputBuffer.getChannelData(0);
 
       let sum = 0;
@@ -125,8 +130,13 @@ export class LiveSession {
 
     const node = this.outCtx.createBufferSource();
     node.buffer = buf; node.connect(this.gain);
+    // Jitter buffer: schedule a little ahead of realtime so a late packet
+    // (network hiccup or a busy main thread) doesn't leave an audible gap.
+    // When we've fallen behind, re-prime ahead of "now" instead of stitching
+    // exactly at now — the zero-lead stitch was the source of the stutter.
+    const LEAD = 0.15;
     const now = this.outCtx.currentTime;
-    this.playhead = Math.max(this.playhead, now);
+    if (this.playhead < now + 0.02) this.playhead = now + LEAD;
     node.start(this.playhead);
     this.playhead += buf.duration;
     this.sources.add(node);
