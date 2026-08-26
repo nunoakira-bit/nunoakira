@@ -281,7 +281,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   .card{animation-name:cardup}
   @keyframes cardup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
   #convo{padding-bottom:18px}
-  #chips{max-height:38px;overflow:hidden}
+  #chips{gap:7px;max-height:none;overflow:visible}
+  #chips button{padding:7px 13px;font-size:12px}
   #dev{display:none!important}
   #said p{font-size:19px}
 }
@@ -686,8 +687,8 @@ float snoise(vec3 v){
 let startLoop=()=>{};
 if(window.THREE){
 const gl=$("gl");
-const renderer=new THREE.WebGLRenderer({canvas:gl,antialias:true,alpha:true,powerPreference:"high-performance"});
-const DPR=Math.min(window.devicePixelRatio||1,2);
+const renderer=new THREE.WebGLRenderer({canvas:gl,antialias:window.innerWidth>=820,alpha:true,powerPreference:"high-performance"});
+const DPR=Math.min(window.devicePixelRatio||1,window.innerWidth<820?1.5:2);
 renderer.setPixelRatio(DPR);
 const scene=new THREE.Scene();
 const cam=new THREE.PerspectiveCamera(42,1,.1,100); cam.position.z=4.6;
@@ -701,7 +702,7 @@ const U={
 
 /* --- core body --- */
 const body=new THREE.Mesh(
-  new THREE.IcosahedronGeometry(1,window.innerWidth<820?5:6),
+  new THREE.IcosahedronGeometry(1,window.innerWidth<820?4:5),
   new THREE.ShaderMaterial({
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
     uniforms:U,
@@ -825,9 +826,14 @@ addEventListener("pointermove",e=>{
 let vis=true,frames=0,fpsT=performance.now(),spin=0;
 document.addEventListener("visibilitychange",()=>vis=!document.hidden);
 const clock=new THREE.Clock();
+function occluded(){
+  return (($("transcript")&&$("transcript").classList.contains("on"))
+    ||($("lab")&&$("lab").classList.contains("on"))
+    ||!!$("shotview"));
+}
 function frame(){
   requestAnimationFrame(frame);
-  if(!vis)return;
+  if(!vis||occluded())return;
   const dt=Math.min(clock.getDelta(),.05);
   U.uTime.value+=dt*(RM?.25:1)*cur.speed*3.2;
   for(const k of["amp","freq","glow","spin","mix","shell"]) cur[k]+=(target[k]-cur[k])*Math.min(dt*3.2,1);
