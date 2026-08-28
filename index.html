@@ -72,6 +72,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 #gate h1 span{display:block;font-style:italic;font-weight:300;color:var(--brass);opacity:.9}
 #gate p{max-width:30ch;margin:26px auto 0;font-size:14px;line-height:1.65;color:var(--bone-dim)}
 #gate .acts{display:flex;flex-direction:column;align-items:center;gap:18px;margin-top:46px}
+#gvisual{color:var(--brass);opacity:.92;font-size:12.5px;letter-spacing:.05em;text-decoration:none;transition:opacity .3s}
+#gvisual:hover{opacity:1;text-decoration:underline}
 
 .primary{position:relative;padding:15px 30px;border:1px solid var(--line);border-radius:999px;
   font-size:14px;letter-spacing:.01em;transition:border-color .4s,background .4s,letter-spacing .4s}
@@ -121,6 +123,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 
 #chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:24px;min-height:30px}
+#casesbtn{margin-top:20px;padding:8px 17px;border:1px solid var(--line);border-radius:999px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);cursor:pointer;transition:.3s}
+#casesbtn:hover{border-color:rgba(194,162,120,.5);background:rgba(194,162,120,.06)}
+#casesbtn[hidden]{display:none}
 #chips button{padding:8px 15px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;
   color:var(--bone-dim);transition:color .3s,border-color .3s,background .3s;
   animation:rise .6s var(--ease) both}
@@ -310,6 +315,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
     <section id="convo" aria-live="polite">
       <div id="said"><p></p></div>
       <div id="you"></div>
+      <button type="button" id="casesbtn" hidden></button>
       <div id="chips"></div>
       <form id="composer" autocomplete="off">
         <input id="field" type="text" aria-label="Message">
@@ -347,6 +353,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   <p id="g-line"></p>
   <div class="acts">
     <button class="primary" id="enter"></button>
+    <a id="gvisual" href="./visual.html"></a>
     <button class="ghost" id="dl"></button>
   </div>
 </section>
@@ -427,10 +434,11 @@ pt:{code:"pt-BR",tag:"PT",
   idleStop:"Desliguei o microfone depois de um tempo em silêncio. Toque no ícone quando quiser voltar a falar.",
   gate:{eyebrow:"Product Design · Curitiba, Brasil",sub:"e uma de suas criaturas",
     line:"Transformo ideias em produtos e sistemas complexos em experiências claras, escaláveis e testáveis.",
-    enter:"Explorar com a IA",resume:"Baixar currículo"},
+    enter:"Explorar com a IA",resume:"Baixar currículo",visual:"Ver portfólio visual"},
   status:{tapSound:"Toque na tela para ativar o som",ready:"Pronta",listening:"Escutando",thinking:"Pensando",responding:"Respondendo",
     denied:"Microfone bloqueado",ended:"Sessão de voz encerrada",text:"Modo texto"},
   bar:{visual:"Portfólio visual",transcript:"Transcrição",sound:"Som ligado",muted:"Som desligado"},
+  casesBtn:"Ver cases",
   chips:["Fale sobre a experiência do Nuno","Quais são suas competências?","Como ele usa IA em design?",
     "Como ele trabalha com design systems?","Como ele colabora com devs?","Como é trabalhar com ele à distância?",
     "Que idiomas ele fala?","Como entro em contato?","Posso baixar o currículo?"],
@@ -472,10 +480,11 @@ en:{code:"en-US",tag:"EN",
   idleStop:"I turned the microphone off after a stretch of silence. Tap the icon whenever you want to speak again.",
   gate:{eyebrow:"Product Design · Curitiba, Brazil",sub:"and one of his creatures",
     line:"I turn ideas into products, and complex systems into clear, scalable and testable experiences.",
-    enter:"Explore with AI",resume:"Download résumé"},
+    enter:"Explore with AI",resume:"Download résumé",visual:"See visual portfolio"},
   status:{tapSound:"Tap the screen to enable sound",ready:"Ready",listening:"Listening",thinking:"Thinking",responding:"Responding",
     denied:"Microphone blocked",ended:"Voice session ended",text:"Text mode"},
   bar:{visual:"Visual portfolio",transcript:"Transcript",sound:"Sound on",muted:"Sound off"},
+  casesBtn:"See cases",
   chips:["Tell me about Nuno's experience","What are his strongest skills?","How does he use AI in product design?",
     "How does he work with design systems?","How does he collaborate with developers?","What is he like to work with remotely?",
     "What languages does he speak?","How can I contact him?","Can I download his résumé?"],
@@ -516,10 +525,11 @@ ja:{code:"ja-JP",tag:"JA",
   idleStop:"しばらく音声がなかったのでマイクをオフにしました。話すときはアイコンを押してください。",
   gate:{eyebrow:"プロダクトデザイン · ブラジル、クリチバ",sub:"そして彼が生んだ存在のひとつ",
     line:"アイデアをプロダクトに、複雑なシステムを明快で拡張性があり検証できる体験に変えています。",
-    enter:"AIと対話する",resume:"履歴書をダウンロード"},
+    enter:"AIと対話する",resume:"履歴書をダウンロード",visual:"ビジュアル版を見る"},
   status:{tapSound:"画面をタップして音声を有効にしてください",ready:"待機中",listening:"聞いています",thinking:"考えています",responding:"応答中",
     denied:"マイクが使えません",ended:"音声セッション終了",text:"テキストモード"},
   bar:{visual:"ビジュアル版",transcript:"記録",sound:"音声オン",muted:"音声オフ"},
+  casesBtn:"事例を見る",
   chips:["ヌノの経験について","得意な領域は？","デザインでAIをどう使いますか？",
     "デザインシステムへの取り組みは？","開発者との協働は？","リモートでの働き方は？",
     "話せる言語は？","連絡方法は？","履歴書はありますか？"],
@@ -935,15 +945,24 @@ function speak(text){
 let revealTimer=null;
 
 function render(text){
-  const box=$("said").querySelector("p"); box.innerHTML="";
-  const words=text.split(/(\s+)/);
-  words.forEach((w,i)=>{
-    if(!w.trim()){box.append(w);return}
-    const s=document.createElement("span");
-    s.className="w"; s.textContent=w;
-    s.style.animationDelay=(i*14)+"ms";
-    box.append(s);
+  const box=$("said").querySelector("p");
+  let shown=box.dataset.full||"";
+  if(text===shown)return;
+  // Streaming: keep the words already revealed and append only the new tail,
+  // so the paragraph isn't wiped and re-animated on every chunk (the flicker).
+  // If the new text doesn't extend the old (new turn/correction), rebuild once.
+  if(!text.startsWith(shown)){ box.innerHTML=""; shown=""; }
+  const add=text.slice(shown.length);
+  const words=add.split(/(\s+)/);
+  let li=0;
+  words.forEach(w=>{
+    if(!w.trim()){ if(w) box.append(document.createTextNode(w)); return; }
+    const sp=document.createElement("span");
+    sp.className="w"; sp.textContent=w;
+    sp.style.animationDelay=(li*14)+"ms"; li++;
+    box.append(sp);
   });
+  box.dataset.full=text;
 }
 
 function say(text,tools=[]){
@@ -1044,6 +1063,22 @@ function chips(){
     b.onclick=()=>{ source="chip"; track("click",{el:"suggestion",text:t}); ask(t) };
     box.append(b);
   });
+}
+
+function showCaseChips(){
+  const box=$("chips"); box.innerHTML="";
+  (K.cases||[]).forEach((k,i)=>{
+    const b=document.createElement("button");
+    b.textContent=k.name; b.style.animationDelay=(i*70+120)+"ms";
+    b.onclick=()=>{ source="cases"; track("click",{el:"case",slug:k.slug}); addCard("show_case",{slug:k.slug}); };
+    box.append(b);
+  });
+}
+function syncCases(){
+  const b=$("casesbtn"); if(!b)return;
+  b.textContent=C().casesBtn||"Cases";
+  b.hidden=!(K.cases&&K.cases.length);
+  b.onclick=showCaseChips;
 }
 
 /* ============================================================
@@ -1235,6 +1270,7 @@ function paintGate(){
   $("g-sub").textContent=g.sub;
   $("g-line").textContent=g.line;
   $("enter").textContent=g.enter;
+  $("gvisual").textContent=g.visual;
   $("dl").textContent=g.resume;
 }
 function hideGate(){ $("gate").classList.add("out");
@@ -1242,7 +1278,7 @@ function hideGate(){ $("gate").classList.add("out");
 
 function chooseLang(l){
   if(started||live)wipeConversation();
-  S.lang=l; store.set("nas.lang",l);
+  S.lang=l; store.set("nas.lang",l); syncCases();
   track("language",{lang:l,returning:started});
   document.documentElement.lang=C().code;
   $("lang").classList.add("out");
@@ -1321,6 +1357,7 @@ async function loadPublished(){
     ]);
     const prof=r[0], sk=r[1], res=r[2], cs=r[3];
     if(cs&&cs.length)K.cases=cs;
+    syncCases();
     if(prof&&prof[0]){
       K.name=prof[0].name||K.name; K.role=prof[0].role||K.role;
       K.location=prof[0].location||K.location;
